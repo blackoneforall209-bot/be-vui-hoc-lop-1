@@ -505,23 +505,40 @@
             </div>
           </div>
 
-          <!-- PDF Page Viewer & Controls -->
+          <!-- PDF Page Viewer & Multi-Page Batch OCR Controls -->
           <div id="creatorPdfPreviewWrap" class="hidden bg-slate-50 rounded-2xl p-4 border-2 border-sky-200 space-y-3">
             <div class="flex flex-wrap items-center justify-between gap-2">
-              <div class="flex items-center gap-2">
+              <div class="flex items-center gap-1.5 flex-wrap">
                 <button id="btnPdfPrevPage" onclick="changeCreatorPdfPage(-1)" class="px-3 py-1.5 rounded-xl bg-white border border-slate-300 font-black text-xs btn-3d">◀ Trang trước</button>
                 <span id="creatorPdfPageIndicator" class="font-black text-xs sm:text-sm text-sky-900 px-2">Trang 1 / 1</span>
                 <button id="btnPdfNextPage" onclick="changeCreatorPdfPage(1)" class="px-3 py-1.5 rounded-xl bg-white border border-slate-300 font-black text-xs btn-3d">Trang sau ▶</button>
               </div>
               <div class="flex items-center gap-2 flex-wrap">
-                <button id="btnExtractPdfTextAndOcr" onclick="extractOrOcrCurrentPdfPage()" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs sm:text-sm border-b-2 border-emerald-800 btn-3d flex items-center gap-1.5">
+                <button id="btnExtractPdfTextAndOcr" onclick="extractOrOcrCurrentPdfPage()" class="px-3.5 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-black text-xs sm:text-sm border-b-2 border-emerald-800 btn-3d flex items-center gap-1">
                   <span>🔍</span><span>Lấy chữ & Quét OCR trang PDF này</span>
                 </button>
-                <button id="btnExtractAllPdfPages" onclick="extractAllPdfTextPages()" class="px-3 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-extrabold text-xs btn-3d">
-                  📑 Lấy chữ toàn bộ PDF
+                <button id="btnExtractAllPdfPages" onclick="extractAllPdfTextPages()" class="px-3.5 py-2 rounded-xl bg-sky-600 hover:bg-sky-700 text-white font-black text-xs sm:text-sm border-b-2 border-sky-800 btn-3d flex items-center gap-1">
+                  <span>📑 Lấy chữ toàn bộ PDF</span>
                 </button>
               </div>
             </div>
+
+            <!-- Multi-Page Range Selector & Quick Page Pills -->
+            <div class="bg-white rounded-xl p-3 border border-sky-200 flex flex-wrap items-center justify-between gap-2 text-xs">
+              <div class="flex items-center gap-1.5 flex-wrap font-bold text-slate-700">
+                <span>📚 Chọn khoảng trang muốn quét: Từ trang</span>
+                <input id="inputPdfStartPage" type="number" min="1" value="1" class="w-14 px-2 py-1 rounded-lg border-2 border-sky-300 font-black text-center text-sky-900" />
+                <span>đến trang</span>
+                <input id="inputPdfEndPage" type="number" min="1" value="3" class="w-14 px-2 py-1 rounded-lg border-2 border-sky-300 font-black text-center text-sky-900" />
+              </div>
+              <button id="btnBatchCreateSeparateExams" onclick="batchCreateExamsFromPdfRange()" class="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-black text-xs border-b-2 border-rose-800 btn-3d">
+                ✨ Tách mỗi trang thành 1 Đề Bài Tập riêng
+              </button>
+            </div>
+
+            <!-- Page Number Quick Jump Strip -->
+            <div id="pdfQuickPageStrip" class="flex items-center gap-1.5 overflow-x-auto no-scrollbar py-1"></div>
+
             <div class="max-h-80 overflow-auto rounded-xl border border-slate-300 bg-white flex justify-center p-2">
               <canvas id="creatorPdfCanvas" class="max-w-full h-auto rounded-lg shadow-xs"></canvas>
             </div>
@@ -2007,6 +2024,271 @@
           { id: "v12_q7", type: "mcq", skill: "reading", hasPassage: true, prompt: "Câu 6 (Trang 22): Cô rùa cho gà con ăn gì?", options: ["A. ăn giun", "B. ăn thóc", "C. ăn cơm"], answer: 1, explanation: "Cuối bài viết: 'Cô còn cho gà con ăn thóc rất ngon.'" }
         ]
       }
+      ,
+      // --- BỘ ĐỀ CHÍNH TẢ & HỌC VẦN TỪ FILE 33 TRANG (TUẦN 21 - 25 & CÔ BÍCH) ---
+      {
+        id: "viet_chinhta_tuan25",
+        subject: "viet",
+        badge: "Tiếng Việt • Tuần 25",
+        title: "Phiếu Bài Tập Chính Tả Tuần 25",
+        subtitle: "Gà hoa mơ và vịt xám, điền vần ôi/ơi, oan/oat, nhận diện từ dưới tranh (Trang 1 PDF)",
+        icon: "🦆",
+        color: "emerald",
+        passageTitle: "Đoạn văn: Gà hoa mơ và vịt xám",
+        passageText: "Gà hoa mơ là bạn của vịt xám. Một hôm, hai bạn rủ nhau đi kiếm ăn. Đi qua hồ nước, chẳng may gà hoa mơ trượt chân ngã. Vịt xám liền lao xuống cứu bạn. Gà hoa mơ cảm ơn vịt xám.",
+        questions: [
+          {
+            id: "ct25_q1", type: "fill_group", skill: "spelling", hasPassage: true,
+            prompt: "Bài mở đầu: Chọn từ viết đúng chính tả trong ngoặc để hoàn thành câu chuyện Gà hoa mơ và Vịt xám:",
+            keypad: ["xám", "sám", "nhau", "nhao", "trượt", "chượt", "lao", "nao"],
+            items: [
+              { prefix: "Gà hoa mơ là bạn của vịt (sám / xám):", answer: "xám", suffix: "" },
+              { prefix: "Một hôm, hai bạn rủ (nhao / nhau):", answer: "nhau", suffix: "đi kiếm ăn." },
+              { prefix: "Chẳng may gà hoa mơ (trượt / chượt):", answer: "trượt", suffix: "chân ngã." },
+              { prefix: "Vịt xám liền (lao / nao):", answer: "lao", suffix: "xuống cứu bạn." }
+            ],
+            explanation: "Các từ đúng chính tả là: vịt xám, rủ nhau, trượt chân, lao xuống."
+          },
+          {
+            id: "ct25_q2", type: "fill_group", skill: "spelling",
+            prompt: "Câu 1: Điền vần 'ôi' hoặc vần 'ơi' (có dấu thanh phù hợp) vào chỗ chấm:",
+            keypad: ["ơi", "ôi", "ối", "ổi", "ồi"],
+            items: [
+              { prefix: "🧣 ph", answer: "ơi", suffix: " khăn" },
+              { prefix: "🍓 quả mâm x", answer: "ôi", suffix: "" },
+              { prefix: "💇‍♀️ tóc r", answer: "ối", suffix: "" },
+              { prefix: "🏊 bể b", answer: "ơi", suffix: "" },
+              { prefix: "🚩 phất ph", answer: "ới", suffix: "" },
+              { prefix: "🍐 quả ", answer: "ổi", suffix: "" },
+              { prefix: "🧢 mũ n", answer: "ồi", suffix: "" },
+              { prefix: "🎺 th", answer: "ổi", suffix: " kèn" },
+              { prefix: "📍 đến n", answer: "ơi", suffix: "" }
+            ],
+            explanation: "phơi khăn, quả mâm xôi, tóc rối, bể bơi, phất phới, quả ổi, mũ nồi, thổi kèn, đến nơi."
+          },
+          {
+            id: "ct25_q3", type: "fill_group", skill: "spelling",
+            prompt: "Câu 2: Điền vần 'oan' hoặc vần 'oat' (có dấu thanh phù hợp) vào chỗ chấm:",
+            keypad: ["oàn", "oát", "oán", "oạt"],
+            items: [
+              { prefix: "Anh em đ", answer: "oàn", suffix: " kết một lòng." },
+              { prefix: "Bé chơi đá bóng t", answer: "oát", suffix: " cả mồ hôi." },
+              { prefix: "Có một đ", answer: "oàn", suffix: " tàu đang chạy." },
+              { prefix: "Cô giáo đang dạy học môn t", answer: "oán", suffix: "." },
+              { prefix: "Buổi sinh h", answer: "oạt", suffix: " cuối tuần diễn ra rất vui." },
+              { prefix: "Gạch nhà bạn Mai bị đổ hàng l", answer: "oạt", suffix: "." }
+            ],
+            explanation: "đoàn kết, toát mồ hôi, đoàn tàu, môn toán, sinh hoạt, hàng loạt."
+          },
+          {
+            id: "ct25_q4", type: "fill_group", skill: "spelling",
+            prompt: "Câu 5: Viết từ ngữ thích hợp dưới mỗi bức tranh (Quả táo, Con trâu, Củ nghệ):",
+            keypad: ["quả táo", "con trâu", "củ nghệ"],
+            items: [
+              { prefix: "🍎 Tranh 1:", answer: "quả táo", suffix: "" },
+              { prefix: "🐃 Tranh 2:", answer: "con trâu", suffix: "" },
+              { prefix: "🫚 Tranh 3:", answer: "củ nghệ", suffix: "" }
+            ],
+            explanation: "Tranh 1 là quả táo, tranh 2 là con trâu, tranh 3 là củ nghệ."
+          }
+        ]
+      },
+      {
+        id: "viet_chinhta_tuan24",
+        subject: "viet",
+        badge: "Tiếng Việt • Tuần 24",
+        title: "Phiếu Bài Tập Chính Tả Tuần 24",
+        subtitle: "Sắp xếp câu, điền vần oan/oăn, chọn từ điền vào chỗ chấm (Trang 2 PDF)",
+        icon: "🦢",
+        color: "teal",
+        questions: [
+          {
+            id: "ct24_q1", type: "ordering", skill: "spelling",
+            prompt: "Câu 1a: Sắp xếp các từ sau thành câu hoàn chỉnh: kế / học / và / Liên / nhóm / hoạch / Lan / lên",
+            tokens: ["nhóm", "lên", "kế hoạch", "Liên và Lan", "học"],
+            answer: ["Liên và Lan", "lên", "kế hoạch", "học", "nhóm"],
+            explanation: "Câu hoàn chỉnh: Liên và Lan lên kế hoạch học nhóm."
+          },
+          {
+            id: "ct24_q2", type: "ordering", skill: "spelling",
+            prompt: "Câu 1b: Sắp xếp các từ sau thành câu hoàn chỉnh: tổ / cô giáo / cho / các bạn / chức / nhật / tháng 4 / sinh",
+            tokens: ["sinh nhật", "Cô giáo", "các bạn", "tổ chức", "cho", "tháng 4"],
+            answer: ["Cô giáo", "tổ chức", "sinh nhật", "cho", "các bạn", "tháng 4"],
+            explanation: "Câu hoàn chỉnh: Cô giáo tổ chức sinh nhật cho các bạn tháng 4."
+          },
+          {
+            id: "ct24_q3", type: "ordering", skill: "spelling",
+            prompt: "Câu 1c: Sắp xếp các từ sau thành câu hoàn chỉnh: mẹ / Châu / đưa / trường / được / đến / học",
+            tokens: ["được mẹ", "đến trường", "Châu", "đưa", "học"],
+            answer: ["Châu", "được mẹ", "đưa", "đến trường", "học"],
+            explanation: "Câu hoàn chỉnh: Châu được mẹ đưa đến trường học."
+          },
+          {
+            id: "ct24_q4", type: "fill_group", skill: "spelling",
+            prompt: "Câu 2: Điền vần 'oan' hoặc 'oăn' (kèm dấu thanh phù hợp):",
+            keypad: ["oàn", "oan", "oăn", "oắn", "oán"],
+            items: [
+              { prefix: "🚂 đ", answer: "oàn", suffix: " tàu" },
+              { prefix: "🛠️ máy kh", answer: "oan", suffix: "" },
+              { prefix: "🪢 dây x", answer: "oắn", suffix: "" },
+              { prefix: "📘 sách t", answer: "oán", suffix: "" },
+              { prefix: "👩‍🦱 tóc x", answer: "oăn", suffix: " tít" },
+              { prefix: "🐚 ốc x", answer: "oắn", suffix: "" },
+              { prefix: "🌸 phiếu bé ng", answer: "oan", suffix: "" }
+            ],
+            explanation: "đoàn tàu, máy khoan, dây xoắn, sách toán, tóc xoăn tít, ốc xoắn, phiếu bé ngoan."
+          },
+          {
+            id: "ct24_q5", type: "fill_group", skill: "spelling",
+            prompt: "Câu 3: Chọn các từ trong ngoặc ( thoại, tuyết, nghĩnh, dâu tây, én, hoạch ) điền vào chỗ chấm:",
+            keypad: ["hoạch", "tuyết", "nghĩnh", "én", "thoại", "dâu tây"],
+            items: [
+              { prefix: "🌾 Thu ", answer: "hoạch", suffix: "" },
+              { prefix: "⛄ người ", answer: "tuyết", suffix: "" },
+              { prefix: "👶 ngộ ", answer: "nghĩnh", suffix: "" },
+              { prefix: "🐦 Chim ", answer: "én", suffix: "" },
+              { prefix: "☎️ điện ", answer: "thoại", suffix: "" },
+              { prefix: "🍓 quả ", answer: "dâu tây", suffix: "" }
+            ],
+            explanation: "Thu hoạch, người tuyết, ngộ nghĩnh, Chim én, điện thoại, quả dâu tây."
+          }
+        ]
+      },
+      {
+        id: "viet_chinhta_tuan23",
+        subject: "viet",
+        badge: "Tiếng Việt • Tuần 23",
+        title: "Phiếu Bài Tập Chính Tả Tuần 23",
+        subtitle: "Điền vẹt/chó, vần uy/uya, chọn từ lúa/ngồi/nhớ/nhặt, sửa lỗi chính tả (Trang 3 PDF)",
+        icon: "🦜",
+        color: "sky",
+        questions: [
+          {
+            id: "ct23_q1", type: "fill_group", skill: "spelling",
+            prompt: "Câu 1: Điền 'vẹt' hoặc 'chó' vào chỗ chấm cho phù hợp:",
+            keypad: ["Con vẹt", "Con chó"],
+            items: [
+              { prefix: "a. ", answer: "Con vẹt", suffix: " có cái mỏ khoằm." },
+              { prefix: "b. ", answer: "Con chó", suffix: " có râu xồm xoàm." }
+            ],
+            explanation: "Con vẹt có cái mỏ khoằm. Con chó có râu xồm xoàm."
+          },
+          {
+            id: "ct23_q2", type: "ordering", skill: "spelling",
+            prompt: "Câu 2a: Sắp xếp các từ sau thành câu hoàn chỉnh: cao / Hươu / là / nhất / thế / con / vật / giới",
+            tokens: ["con vật", "Hươu", "cao nhất", "thế giới", "là"],
+            answer: ["Hươu", "là", "con vật", "cao nhất", "thế giới"],
+            explanation: "Hươu là con vật cao nhất thế giới."
+          },
+          {
+            id: "ct23_q3", type: "fill_group", skill: "spelling",
+            prompt: "Câu 3: Điền vần 'uy' hoặc 'uya' (kèm dấu thanh phù hợp):",
+            keypad: ["uy", "uya", "uý", "uỵ"],
+            items: [
+              { prefix: "👕 kh", answer: "uy", suffix: " áo" },
+              { prefix: "🎖️ h", answer: "uy", suffix: " hiệu" },
+              { prefix: "🎋 l", answer: "uỹ", suffix: " tre" },
+              { prefix: "🧥 phéc mơ t", answer: "uya", suffix: "" },
+              { prefix: "🌙 đêm kh", answer: "uya", suffix: "" },
+              { prefix: "⚠️ ng", answer: "uy", suffix: " hiểm" },
+              { prefix: "🦉 thức kh", answer: "uya", suffix: "" },
+              { prefix: "⚓ th", answer: "uỷ", suffix: " thủ" }
+            ],
+            explanation: "khuy áo, huy hiệu, luỹ tre, phéc mơ tuya, đêm khuya, nguy hiểm, thức khuya, thuỷ thủ."
+          },
+          {
+            id: "ct23_q4", type: "fill_group", skill: "reading",
+            prompt: "Câu 5: Chọn từ trong ngoặc ( lúa, ngồi, nhớ, nhặt ) điền vào chỗ chấm:",
+            keypad: ["ngồi", "nhặt", "lúa", "nhớ"],
+            items: [
+              { prefix: "a. Các bạn học sinh ", answer: "ngồi", suffix: " im lặng đọc bài." },
+              { prefix: "b. Sáng sớm, các cô cậu học trò lại ùa ra ", answer: "nhặt", suffix: " rác trên sân trường." },
+              { prefix: "c. Bố mẹ đang gặt ", answer: "lúa", suffix: " trên đồng ruộng." },
+              { prefix: "d. Ông bà về quê mất, bé Bi rất ", answer: "nhớ", suffix: " ông bà." }
+            ],
+            explanation: "ngồi im lặng, nhặt rác, gặt lúa, nhớ ông bà."
+          },
+          {
+            id: "ct23_q5", type: "fill_group", skill: "spelling",
+            prompt: "Câu 6: Sửa lại các từ viết sai chính tả sau cho đúng:",
+            keypad: ["bánh gai", "cặp sách", "tủ lệch", "máy tính", "kéo co", "bầu trời"],
+            items: [
+              { prefix: "bánh gay ➔", answer: "bánh gai", suffix: "" },
+              { prefix: "cặp xách ➔", answer: "cặp sách", suffix: "" },
+              { prefix: "tủ nệch ➔", answer: "tủ lệch", suffix: "" },
+              { prefix: "mái tính ➔", answer: "máy tính", suffix: "" },
+              { prefix: "céo co ➔", answer: "kéo co", suffix: "" },
+              { prefix: "bầu chời ➔", answer: "bầu trời", suffix: "" }
+            ],
+            explanation: "Các từ đúng là: bánh gai, cặp sách, tủ lệch, máy tính, kéo co, bầu trời."
+          }
+        ]
+      },
+      {
+        id: "viet_chinhta_tuan21_22",
+        subject: "viet",
+        badge: "Tiếng Việt • Tuần 21 & 22",
+        title: "Phiếu Bài Tập Chính Tả Tuần 21 & 22",
+        subtitle: "Điền oa/oe, ơm/ơp, chọn từ đúng chính tả Vườn hoa nhà Thu & Sinh nhật mẹ (Trang 4 & 5 PDF)",
+        icon: "🌺",
+        color: "rose",
+        questions: [
+          {
+            id: "ct22_q1", type: "fill_group", skill: "spelling",
+            prompt: "Tuần 22 - Câu 2: Điền vần 'oa' hoặc 'oe' (kèm dấu thanh phù hợp):",
+            keypad: ["oé", "oè", "oa", "oà", "oá", "oe"],
+            items: [
+              { prefix: "💦 nước tung t", answer: "oé", suffix: "" },
+              { prefix: "🐦 chích ch", answer: "oè", suffix: "" },
+              { prefix: "📢 cái l", answer: "oa", suffix: "" },
+              { prefix: "📝 nh", answer: "oè", suffix: " chữ" },
+              { prefix: "🔒 ổ kh", answer: "oá", suffix: "" },
+              { prefix: "🎨 h", answer: "oạ", suffix: " sĩ" },
+              { prefix: "⭕ tròn x", answer: "oe", suffix: "" }
+            ],
+            explanation: "nước tung toé, chích choè, cái loa, nhoè chữ, ổ khoá, hoạ sĩ, tròn xoe."
+          },
+          {
+            id: "ct22_q2", type: "fill_group", skill: "spelling",
+            prompt: "Tuần 22 - Câu 3: Chọn từ đúng chính tả trong ngoặc cho đoạn văn Vườn nhà Thu:",
+            keypad: ["trồng", "chồng", "sắc", "xắc", "giấy", "dấy", "trắng", "chắng", "dạ", "giạ"],
+            items: [
+              { prefix: "Vườn nhà Thu (chồng / trồng):", answer: "trồng", suffix: "rất nhiều hoa." },
+              { prefix: "Hoa cúc thúy đủ màu (sắc / xắc):", answer: "sắc", suffix: "." },
+              { prefix: "Hoa (giấy / dấy):", answer: "giấy", suffix: "cánh mỏng như tờ pơ luya." },
+              { prefix: "Hoa thủy tiên cánh (trắng / chẳng):", answer: "trắng", suffix: "nhụy vàng." },
+              { prefix: "Hoa (giạ / dạ):", answer: "dạ", suffix: "hương càng về khuya càng thơm." }
+            ],
+            explanation: "Các từ đúng là: trồng, màu sắc, hoa giấy, cánh trắng, hoa dạ hương."
+          },
+          {
+            id: "ct22_q3", type: "matching", skill: "reading",
+            prompt: "Tuần 22 - Câu 5: Nối ô chữ ở cột A với ô chữ ở cột B cho phù hợp:",
+            pairs: [
+              { left: "🏫 Em đang học", right: "ở trường Phan Bội Châu." },
+              { left: "🌳 Sân trường em", right: "rất rộng và nhiều cây." },
+              { left: "👩‍🏫 Cô giáo em", right: "giảng bài rất hay." },
+              { left: "👧 Các bạn nữ", right: "rất thích nhảy dây." }
+            ],
+            explanation: "Em đang học ở trường Phan Bội Châu. Sân trường em rất rộng và nhiều cây. Cô giáo em giảng bài rất hay. Các bạn nữ rất thích nhảy dây."
+          },
+          {
+            id: "ct21_q4", type: "fill_group", skill: "spelling",
+            prompt: "Tuần 21 - Câu 2 & Câu 4: Điền vần ơm/ơp và chọn từ đúng cho đoạn văn Sinh nhật mẹ:",
+            keypad: ["ơp", "ơm", "ớp", "chúc", "rán", "lắm", "phúc", "gian"],
+            items: [
+              { prefix: "🐟 cá b", answer: "ớp", suffix: "" },
+              { prefix: "🌾 r", answer: "ơm", suffix: " rạ" },
+              { prefix: "🍚 c", answer: "ơm", suffix: " nếp" },
+              { prefix: "Làm bữa tối (chúc / trúc):", answer: "chúc", suffix: "mừng sinh nhật mẹ." },
+              { prefix: "Có tôm hùm, cá kho và cả nem (ráng / rán):", answer: "rán", suffix: "." },
+              { prefix: "Mẹ vui (nắm / lắm):", answer: "lắm", suffix: "." },
+              { prefix: "Người phụ nữ hạnh (phúc / phức):", answer: "phúc", suffix: "nhất trần gian." }
+            ],
+            explanation: "cá bớp, rơm rạ, cơm nếp; chúc mừng, nem rán, vui lắm, hạnh phúc."
+          }
+        ]
+      },
     ];
 
     const SKILL_CATEGORIES = [
@@ -4916,7 +5198,113 @@
       return canvas.toDataURL("image/jpeg", quality);
     }
 
-    // --- A. IMAGE UPLOAD & TESSERACT VIETNAMESE OCR ---
+    // --- A. IMAGE PRE-PROCESSING & VIETNAMESE OCR NOISE SANITIZER ---
+    // Pre-process canvas for OCR: high-contrast binarization + erase long dotted fill-in lines (......)
+    // so Tesseract never hallucinates gibberish like "neeesseeesee" or "GHSGSGS..."!
+    function createOcrCleanedDataUrlFromSource(imgOrCanvas) {
+      const c = document.createElement("canvas");
+      const w = imgOrCanvas.width || imgOrCanvas.naturalWidth || 800;
+      const h = imgOrCanvas.height || imgOrCanvas.naturalHeight || 1000;
+      c.width = w;
+      c.height = h;
+      const ctx = c.getContext("2d");
+      ctx.fillStyle = "#FFFFFF";
+      ctx.fillRect(0, 0, w, h);
+      ctx.drawImage(imgOrCanvas, 0, 0, w, h);
+
+      try {
+        const imgData = ctx.getImageData(0, 0, w, h);
+        const data = imgData.data;
+        // Convert to crisp high-contrast grayscale to sharpen Vietnamese diacritics
+        for (let i = 0; i < data.length; i += 4) {
+          const r = data[i];
+          const g = data[i + 1];
+          const b = data[i + 2];
+          const lum = 0.299 * r + 0.587 * g + 0.114 * b;
+          const v = lum < 175 ? Math.max(0, (lum - 40) * 0.7) : 255;
+          data[i] = v;
+          data[i + 1] = v;
+          data[i + 2] = v;
+        }
+        ctx.putImageData(imgData, 0, 0);
+      } catch (e) {}
+      return c.toDataURL("image/jpeg", 0.9);
+    }
+
+    // Post-process raw OCR output to strip dotted-line hallucinations ("neeesseeesee", "GHSGSG...", "nnnnn", etc.)
+    function cleanVietnameseOcrText(rawText) {
+      if (!rawText) return "";
+      const rawLines = String(rawText).replace(/\r\n/g, "\n").split("\n");
+      const cleanedLines = [];
+
+      // Common OCR misread corrections for Vietnamese Grade 1 worksheets
+      const ocrWordFixes = [
+        [/\bkiêm ăn\b/gi, "kiếm ăn"],
+        [/\bhô nước\b/gi, "hồ nước"],
+        [/\bchăng may\b/gi, "chẳng may"],
+        [/\bfrượt\b/gi, "trượt"],
+        [/\bchượ!\b/gi, "chượt"],
+        [/\bVỊt\b/g, "Vịt"],
+        [/\bliên\s*\(\s*ao\s*\/\s*nao\s*\)/gi, "liền ( lao / nao )"],
+        [/\bxuông cứu\b/gi, "xuống cứu"],
+        [/\bđồ hang\b/gi, "đổ hàng"]
+      ];
+
+      for (let line of rawLines) {
+        let s = line.trim();
+        if (!s) continue;
+
+        // 1. Skip lines that are predominantly uppercase gibberish or repeated characters from dotted lines / pictures
+        const noSpace = s.replace(/\s+/g, "");
+        if (/^[A-Z0-9¡!|_\-—ø()"':.=]{8,}$/.test(noSpace) && !/[ÀÁẢÃẠĂẮẰẲẴẶÂẤẦẨẪẬĐÈÉẺẼẸÊẾỀỂỄỆÌÍỈĨỊÒÓỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢÙÚỦŨỤƯỨỪỬỮỰỲÝỶỸỴ]/.test(s)) {
+          continue;
+        }
+        if (/^(?:ø|sex|sec|non)\b/i.test(s) && s.length < 15) {
+          continue;
+        }
+
+        // 2. Replace words that have >=3 identical consecutive letters (e.g. "neeesseeesee", "nnnnnnn", "zssezeess")
+        // or words > 7 chars (since longest valid Vietnamese syllable is "nghiêng" = 7 chars!) with "..."
+        const tokens = s.split(/\s+/);
+        const keptTokens = [];
+        for (let tok of tokens) {
+          const core = tok.replace(/[.,!?;:()/\[\]"'“”-]/g, "");
+          if (!core) {
+            if (tok.includes("..") || tok === "/" || tok === "(" || tok === ")") keptTokens.push(tok);
+            continue;
+          }
+          // Detect gibberish token
+          const hasTripleRepeat = /(.)\1\1/i.test(core) && !/^\.{3,}$/.test(tok);
+          const isTooLongForVietnamese = /^[a-zA-Z]{8,}$/.test(core);
+          const isRandomNoise = /^(?:icesesses|zssezeess|miospE|pngeeaveneeepnsn|coeneteeesteteenes|seorgeusevrdome|000001|001g|1111|EEn|n0)$/i.test(core);
+
+          if (hasTripleRepeat || isTooLongForVietnamese || isRandomNoise) {
+            // Convert dotted-line hallucination back into a clean "..." blank if not already preceded by "..."
+            if (keptTokens.length && keptTokens[keptTokens.length - 1] !== "...") {
+              keptTokens.push("...");
+            }
+          } else {
+            keptTokens.push(tok);
+          }
+        }
+
+        s = keptTokens.join(" ").replace(/(?:\.\.\.\s*){2,}/g, "... ");
+        for (const [pattern, replacement] of ocrWordFixes) {
+          s = s.replace(pattern, replacement);
+        }
+
+        // Remove trailing garbage after valid words like "ưu cả: HS ESS" or "(2| Ý: HN"
+        s = s.replace(/\s+(?:ưu cả:\s*HS\s*ESS|\(2\|\s*Ý:\s*HN|TH\s*Tố.*)$/i, "");
+
+        const alphaCount = (s.match(/[a-zA-ZÀ-ỹ0-9]/g) || []).length;
+        if (alphaCount >= 2) {
+          cleanedLines.push(s.trim());
+        }
+      }
+
+      return cleanedLines.join("\n");
+    }
+
     function onSelectCreatorImage(event) {
       const file = event.target.files && event.target.files[0];
       if (!file) return;
@@ -4933,11 +5321,11 @@
         img.onload = () => {
           const compressed = compressImageSourceToDataUrl(img, 860, 0.8);
           creatorState.attachedImageDataUrl = compressed;
+          creatorState._rawImageElement = img;
           const prevEl = document.getElementById("creatorImagePreviewEl");
           const wrapEl = document.getElementById("creatorImagePreviewWrap");
           if (prevEl) prevEl.src = compressed;
           if (wrapEl) wrapEl.classList.remove("hidden");
-          // Automatically start OCR on the selected image
           runOcrOnCurrentImage();
         };
         img.src = e.target.result;
@@ -4948,19 +5336,20 @@
     function clearCreatorImage() {
       playSoundClick();
       creatorState.attachedImageDataUrl = "";
+      creatorState._rawImageElement = null;
       const wrapEl = document.getElementById("creatorImagePreviewWrap");
       if (wrapEl) wrapEl.classList.add("hidden");
       const inp = document.getElementById("inputCreatorImage");
       if (inp) inp.value = "";
     }
 
-    async function runOcrOnDataUrl(dataUrl, sourceLabel = "ảnh") {
+    async function runOcrOnDataUrl(dataUrl, sourceLabel = "ảnh", appendMode = true) {
       if (!window.Tesseract) {
         showToast("Không tải được thư viện OCR. Bạn có thể gõ hoặc dán nội dung vào ô bên dưới nhé!", "⚠️");
-        return;
+        return "";
       }
       try {
-        updateOcrProgressUI(true, `🔍 Đang nhận diện chữ Tiếng Việt & Toán từ ${sourceLabel}...`, 10);
+        updateOcrProgressUI(true, `🔍 Đang nhận diện & lọc nhiễu chữ Tiếng Việt từ ${sourceLabel}...`, 10);
         const result = await window.Tesseract.recognize(dataUrl, "vie", {
           logger: (m) => {
             if (m && m.status === "recognizing text" && typeof m.progress === "number") {
@@ -4969,20 +5358,25 @@
           }
         });
         updateOcrProgressUI(false);
-        const extracted = (result && result.data && result.data.text ? result.data.text : "").trim();
-        if (extracted) {
+        const rawExtracted = (result && result.data && result.data.text ? result.data.text : "").trim();
+        const cleaned = cleanVietnameseOcrText(rawExtracted);
+        if (cleaned) {
           const ta = document.getElementById("textareaCreatorRaw");
           if (ta) {
-            ta.value = (ta.value.trim() ? ta.value.trim() + "\n\n" : "") + extracted;
+            ta.value = appendMode && ta.value.trim()
+              ? ta.value.trim() + "\n\n" + cleaned
+              : cleaned;
           }
           playSoundCorrect();
-          showToast("Đã quét chữ thành công! Bạn có thể kiểm tra lại ở Bước 2 rồi bấm Phân Tích.", "✨");
+          showToast(`Đã quét & làm sạch văn bản từ ${sourceLabel}!`, "✨");
         } else {
-          showToast("Ảnh hơi mờ hoặc ít chữ. Bạn có thể bổ sung nội dung ở ô Bước 2 nhé!", "💡");
+          showToast("Trang ít chữ hoặc chủ yếu là hình vẽ. Bạn có thể gõ bổ sung ở Bước 2 nhé!", "💡");
         }
+        return cleaned;
       } catch (err) {
         updateOcrProgressUI(false);
-        showToast("Không thể quét tự động ảnh này. Bạn hãy nhập nội dung vào ô văn bản nhé!", "💡");
+        showToast("Không thể quét tự động trang này. Bạn hãy nhập nội dung vào ô văn bản nhé!", "💡");
+        return "";
       }
     }
 
@@ -4991,10 +5385,41 @@
         showToast("Hãy chọn một bức ảnh trước nhé!", "📷");
         return;
       }
-      runOcrOnDataUrl(creatorState.attachedImageDataUrl, "ảnh phiếu bài tập");
+      const cleanImgUrl = creatorState._rawImageElement
+        ? createOcrCleanedDataUrlFromSource(creatorState._rawImageElement)
+        : creatorState.attachedImageDataUrl;
+      runOcrOnDataUrl(cleanImgUrl, "ảnh phiếu bài tập", false);
     }
 
-    // --- B. PDF UPLOAD, PAGE RENDERING & TEXT/OCR EXTRACTION ---
+    // --- B. MULTI-PAGE PDF UPLOAD, PAGE STRIP & BATCH OCR ---
+    function renderPdfQuickPageStrip() {
+      const strip = document.getElementById("pdfQuickPageStrip");
+      if (!strip || !creatorState.pdfDoc) return;
+      const total = creatorState.pdfTotalPages;
+      const curr = creatorState.pdfPageNum;
+      let htmlPills = "";
+      for (let p = 1; p <= total; p++) {
+        const active = p === curr;
+        htmlPills += `
+          <button type="button" onclick="jumpToCreatorPdfPage(${p})" class="px-2.5 py-1 rounded-lg font-black text-xs shrink-0 border transition-all ${
+            active ? "bg-sky-600 text-white border-sky-800 shadow-2xs" : "bg-white text-slate-700 border-slate-200 hover:bg-sky-50"
+          }">
+            Tr.${p}
+          </button>
+        `;
+      }
+      strip.innerHTML = htmlPills;
+    }
+
+    async function jumpToCreatorPdfPage(pNum) {
+      if (!creatorState.pdfDoc) return;
+      if (pNum < 1 || pNum > creatorState.pdfTotalPages) return;
+      playSoundClick();
+      creatorState.pdfPageNum = pNum;
+      await renderCurrentPdfPageToCanvas();
+      renderPdfQuickPageStrip();
+    }
+
     async function onSelectCreatorPdf(event) {
       const file = event.target.files && event.target.files[0];
       if (!file) return;
@@ -5012,17 +5437,25 @@
       window.pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
 
       try {
-        updateOcrProgressUI(true, "📄 Đang mở tài liệu PDF...", 25);
+        updateOcrProgressUI(true, "📄 Đang mở tài liệu PDF nhiều trang...", 25);
         const arrayBuf = await file.arrayBuffer();
         const pdfDoc = await window.pdfjsLib.getDocument({ data: arrayBuf }).promise;
         creatorState.pdfDoc = pdfDoc;
         creatorState.pdfPageNum = 1;
         creatorState.pdfTotalPages = pdfDoc.numPages || 1;
+
+        const startInp = document.getElementById("inputPdfStartPage");
+        const endInp = document.getElementById("inputPdfEndPage");
+        if (startInp) { startInp.max = creatorState.pdfTotalPages; startInp.value = 1; }
+        if (endInp) { endInp.max = creatorState.pdfTotalPages; endInp.value = Math.min(creatorState.pdfTotalPages, 3); }
+
         document.getElementById("creatorPdfPreviewWrap").classList.remove("hidden");
+        renderPdfQuickPageStrip();
         await renderCurrentPdfPageToCanvas();
         updateOcrProgressUI(false);
-        // Automatically extract text or OCR page 1
-        await extractOrOcrCurrentPdfPage();
+
+        showToast(`Đã tải PDF gồm ${creatorState.pdfTotalPages} trang! Đang quét Trang 1 (bạn có thể chọn khoảng trang để quét nhiều trang cùng lúc).`, "📚");
+        await extractOrOcrCurrentPdfPage(false);
       } catch (err) {
         updateOcrProgressUI(false);
         showToast("Không đọc được file PDF này. Hãy thử chụp ảnh màn hình trang đề rồi nạp qua mục Ảnh nhé!", "⚠️");
@@ -5036,7 +5469,7 @@
       if (indicator) indicator.textContent = `Trang ${pageNum} / ${creatorState.pdfTotalPages}`;
 
       const page = await creatorState.pdfDoc.getPage(pageNum);
-      const viewport = page.getViewport({ scale: 1.5 });
+      const viewport = page.getViewport({ scale: 1.65 });
       const canvas = document.getElementById("creatorPdfCanvas");
       if (!canvas) return;
       canvas.width = viewport.width;
@@ -5044,7 +5477,6 @@
       const ctx = canvas.getContext("2d");
       await page.render({ canvasContext: ctx, viewport: viewport }).promise;
 
-      // Also save compressed image of this PDF page so the child can view the visual diagram
       creatorState.attachedImageDataUrl = compressImageSourceToDataUrl(canvas, 860, 0.8);
     }
 
@@ -5052,57 +5484,157 @@
       if (!creatorState.pdfDoc) return;
       const next = creatorState.pdfPageNum + delta;
       if (next < 1 || next > creatorState.pdfTotalPages) return;
-      playSoundClick();
-      creatorState.pdfPageNum = next;
-      await renderCurrentPdfPageToCanvas();
+      await jumpToCreatorPdfPage(next);
     }
 
-    async function extractOrOcrCurrentPdfPage() {
+    async function extractSinglePdfPageTextOrOcr(pageNum) {
+      const page = await creatorState.pdfDoc.getPage(pageNum);
+      const textContent = await page.getTextContent();
+      const strings = (textContent.items || []).map(it => it.str || "").join(" ").trim();
+      if (strings.length > 25) {
+        return cleanVietnameseOcrText(strings);
+      }
+      // Scanned PDF page -> render to offscreen canvas, preprocess, and run Tesseract OCR!
+      const viewport = page.getViewport({ scale: 1.65 });
+      const tempCanvas = document.createElement("canvas");
+      tempCanvas.width = viewport.width;
+      tempCanvas.height = viewport.height;
+      const ctx = tempCanvas.getContext("2d");
+      await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+      const cleanedDataUrl = createOcrCleanedDataUrlFromSource(tempCanvas);
+      const res = await window.Tesseract.recognize(cleanedDataUrl, "vie");
+      const rawTxt = (res && res.data && res.data.text) ? res.data.text : "";
+      return cleanVietnameseOcrText(rawTxt);
+    }
+
+    async function extractOrOcrCurrentPdfPage(appendMode = true) {
       if (!creatorState.pdfDoc) return;
-      try {
-        const page = await creatorState.pdfDoc.getPage(creatorState.pdfPageNum);
-        const textContent = await page.getTextContent();
-        const strings = (textContent.items || []).map(it => it.str || "").join(" ").trim();
-        if (strings.length > 25) {
-          const ta = document.getElementById("textareaCreatorRaw");
-          if (ta) {
-            ta.value = (ta.value.trim() ? ta.value.trim() + "\n\n" : "") + strings;
-          }
-          playSoundCorrect();
-          showToast(`Đã trích xuất văn bản từ Trang ${creatorState.pdfPageNum}!`, "📄");
-        } else {
-          // Scanned image PDF -> run Tesseract OCR on the rendered PDF canvas!
-          const canvas = document.getElementById("creatorPdfCanvas");
-          if (canvas) {
-            const dataUrl = canvas.toDataURL("image/jpeg", 0.85);
-            await runOcrOnDataUrl(dataUrl, `Trang ${creatorState.pdfPageNum} PDF`);
-          }
+      const pNum = creatorState.pdfPageNum;
+      await renderCurrentPdfPageToCanvas();
+      const canvas = document.getElementById("creatorPdfCanvas");
+      const page = await creatorState.pdfDoc.getPage(pNum);
+      const tc = await page.getTextContent();
+      const strings = (tc.items || []).map(it => it.str || "").join(" ").trim();
+
+      if (strings.length > 25) {
+        const cleaned = cleanVietnameseOcrText(strings);
+        const ta = document.getElementById("textareaCreatorRaw");
+        if (ta) {
+          ta.value = appendMode && ta.value.trim() ? ta.value.trim() + `\n\n--- Trang ${pNum} ---\n` + cleaned : cleaned;
         }
-      } catch (e) {}
+        playSoundCorrect();
+        showToast(`Đã lấy chữ từ Trang ${pNum}!`, "📄");
+      } else if (canvas) {
+        const cleanedDataUrl = createOcrCleanedDataUrlFromSource(canvas);
+        await runOcrOnDataUrl(cleanedDataUrl, `Trang ${pNum} / ${creatorState.pdfTotalPages} PDF`, appendMode);
+      }
     }
 
+    // Batch scan across the user-selected range of PDF pages (works for both text PDFs and scanned image PDFs!)
     async function extractAllPdfTextPages() {
       if (!creatorState.pdfDoc) return;
-      updateOcrProgressUI(true, "📑 Đang trích xuất chữ từ các trang PDF...", 20);
-      const allTexts = [];
-      const maxPages = Math.min(creatorState.pdfTotalPages, 10);
-      for (let p = 1; p <= maxPages; p++) {
-        updateOcrProgressUI(true, `📑 Đang đọc trang ${p}/${maxPages}...`, Math.round((p / maxPages) * 90));
-        const page = await creatorState.pdfDoc.getPage(p);
-        const tc = await page.getTextContent();
-        const pageStr = (tc.items || []).map(it => it.str || "").join(" ").trim();
-        if (pageStr) allTexts.push(`--- Trang ${p} ---\n` + pageStr);
+      const startInp = document.getElementById("inputPdfStartPage");
+      const endInp = document.getElementById("inputPdfEndPage");
+      let startP = startInp ? parseInt(startInp.value, 10) || 1 : 1;
+      let endP = endInp ? parseInt(endInp.value, 10) || creatorState.pdfTotalPages : Math.min(creatorState.pdfTotalPages, 5);
+      startP = Math.max(1, Math.min(startP, creatorState.pdfTotalPages));
+      endP = Math.max(startP, Math.min(endP, creatorState.pdfTotalPages));
+
+      if (endP - startP + 1 > 8) {
+        endP = startP + 7;
+        if (endInp) endInp.value = endP;
+        showToast(`Để đảm bảo tốc độ trên điện thoại, hệ thống quét tối đa 8 trang/lần (Trang ${startP} ➔ ${endP})!`, "⚡");
+      }
+
+      const collected = [];
+      const totalToScan = endP - startP + 1;
+      for (let p = startP; p <= endP; p++) {
+        const stepIdx = p - startP + 1;
+        updateOcrProgressUI(
+          true,
+          `📑 Đang quét chữ & lọc nhiễu Trang ${p} (trang ${stepIdx}/${totalToScan})...`,
+          Math.round(((stepIdx - 0.5) / totalToScan) * 100)
+        );
+        creatorState.pdfPageNum = p;
+        renderPdfQuickPageStrip();
+        await renderCurrentPdfPageToCanvas();
+        const pageText = await extractSinglePdfPageTextOrOcr(p);
+        if (pageText) {
+          collected.push(`--- Trang ${p} ---\n` + pageText);
+        }
       }
       updateOcrProgressUI(false);
-      if (allTexts.length > 0) {
+      if (collected.length > 0) {
         const ta = document.getElementById("textareaCreatorRaw");
-        if (ta) ta.value = allTexts.join("\n\n");
-        playSoundCorrect();
-        showToast(`Đã lấy chữ từ ${allTexts.length} trang PDF!`, "📑");
-      } else {
-        showToast("PDF này là dạng ảnh scan. Hệ thống sẽ quét OCR trang đang chọn!", "🔍");
-        await extractOrOcrCurrentPdfPage();
+        if (ta) ta.value = collected.join("\n\n");
+        const titleInp = document.getElementById("inputLessonTitle");
+        if (titleInp) {
+          titleInp.value = `Phiếu Bài Tập PDF (Trang ${startP} - ${endP})`;
+        }
+        playSoundFanfare();
+        showToast(`Đã quét xong ${collected.length} trang PDF (Trang ${startP} ➔ ${endP})! Bấm Phân Tích để tạo bài học nhé!`, "🎉");
       }
+    }
+
+    // Batch-create a separate Exam for EACH page in the selected range!
+    async function batchCreateExamsFromPdfRange() {
+      if (!creatorState.pdfDoc) {
+        showToast("Hãy chọn một file PDF trước nhé!", "📄");
+        return;
+      }
+      const startInp = document.getElementById("inputPdfStartPage");
+      const endInp = document.getElementById("inputPdfEndPage");
+      let startP = startInp ? parseInt(startInp.value, 10) || 1 : 1;
+      let endP = endInp ? parseInt(endInp.value, 10) || 1 : 1;
+      startP = Math.max(1, Math.min(startP, creatorState.pdfTotalPages));
+      endP = Math.max(startP, Math.min(endP, creatorState.pdfTotalPages));
+      if (endP - startP + 1 > 6) {
+        endP = startP + 5;
+        if (endInp) endInp.value = endP;
+      }
+
+      const forcedSubj = document.getElementById("selectLessonSubject").value;
+      const baseTitle = (document.getElementById("inputLessonTitle").value || "Phiếu PDF").replace(/\s*\(Trang.*\)$/i, "").trim();
+      let createdCount = 0;
+
+      for (let p = startP; p <= endP; p++) {
+        const stepIdx = p - startP + 1;
+        const total = endP - startP + 1;
+        updateOcrProgressUI(true, `📚 Đang tạo Đề Bài Tập cho Trang ${p} (${stepIdx}/${total})...`, Math.round((stepIdx / total) * 95));
+        creatorState.pdfPageNum = p;
+        renderPdfQuickPageStrip();
+        await renderCurrentPdfPageToCanvas();
+        const pageText = await extractSinglePdfPageTextOrOcr(p);
+        const lessonObj = parseRawDocumentIntoLesson(
+          pageText || `Bài tập Trang ${p}`,
+          `${baseTitle} - Trang ${p}`,
+          forcedSubj,
+          true
+        );
+        lessonObj.id = `custom_pdf_p${p}_` + Date.now();
+        appState.customExams.push({
+          id: lessonObj.id,
+          isCustom: true,
+          subject: lessonObj.subject,
+          badge: `✨ PDF • Trang ${p}`,
+          title: lessonObj.title,
+          subtitle: `${lessonObj.questions.length} câu hỏi tương tác • Tạo từ Trang ${p}`,
+          icon: lessonObj.icon,
+          color: "rose",
+          customImage: creatorState.attachedImageDataUrl || "",
+          passageTitle: lessonObj.passageTitle,
+          passageText: lessonObj.passageText,
+          questions: lessonObj.questions
+        });
+        createdCount++;
+      }
+
+      updateOcrProgressUI(false);
+      syncCustomLessonsIntoCatalogs();
+      saveState();
+      playSoundFanfare();
+      showToast(`Đã tạo thành công ${createdCount} Đề Bài Tập riêng biệt (Trang ${startP} ➔ ${endP})!`, "🎉");
+      switchMainTab("home");
     }
 
     // --- C. SAMPLE TEMPLATES & TEXT HELPERS ---
@@ -5114,31 +5646,26 @@
       if (!ta) return;
 
       if (kind === "viet") {
-        if (titleInp) titleInp.value = "Đề Ôn Tập Tiếng Việt: Chú Chim Sâu";
+        if (titleInp) titleInp.value = "Phiếu Chính Tả: Gà Hoa Mơ & Vịt Xám";
         if (subjSel) subjSel.value = "viet";
-        ta.value = `Bài đọc: Chú chim sâu
-Trong vườn cây của ông có một chú chim sâu nhỏ nhắn. Sáng nào chú cũng nhảy nhót trên cành bưởi để bắt sâu cho cây. Nhờ có chim sâu mà vườn cây luôn xanh tốt, trĩu quả. Em rất yêu quý chú chim sâu có ích.
+        ta.value = `Gà hoa mơ là bạn của vịt ( sám / xám ). Một hôm, hai bạn rủ ( nhao / nhau ) đi kiếm ăn. Đi qua hồ nước, chẳng may gà hoa mơ ( trượt / chượt ) chân ngã. Vịt xám liền ( lao / nao ) xuống cứu bạn.
 
-Câu 1: Buổi sáng, chú chim sâu thường làm gì trên cành bưởi?
-A. Ngủ sưởi nắng
-B. Nhảy nhót bắt sâu cho cây
-C. Hót véo von tìm mẹ
-Đáp án: B
+Câu 1: Điền vần ôi hoặc vần ơi
+ph... khăn
+quả mâm x...
+tóc r...
+bể b...
+mũ n...
+th... kèn
 
-Câu 2: Nhờ có chim sâu mà vườn cây của ông như thế nào?
-A. Luôn xanh tốt, trĩu quả
-B. Rụng hết lá
-C. Không có quả
-Đáp án: A
+Câu 2: Chọn các từ sau điền vào chỗ chấm ( thoại, tuyết, nghĩnh, dâu tây )
+người ...
+ngộ ...
+điện ...
+quả ...
 
-Điền vào chỗ trống:
-chim [s]âu
-xanh [t]ốt
-nhảy [nh]ót
-trĩu [qu]ả
-
-Sắp xếp từ thành câu:
-bắt sâu / Chú chim sâu / chăm chỉ / bảo vệ vườn cây.`;
+Câu 3: Sắp xếp các từ sau thành câu hoàn chỉnh:
+a. kế / học / và / Liên / nhóm / hoạch / Lan / lên`;
       } else if (kind === "math") {
         if (titleInp) titleInp.value = "Phiếu Bài Tập Toán Lớp 1 - Tuần Ôn Tập";
         if (subjSel) subjSel.value = "math";
@@ -5184,8 +5711,40 @@ Sắp xếp các số 7, 2, 9, 4 theo thứ tự từ bé đến lớn.`;
     // =========================================================================
     // 13B. BỘ MÁY PHÂN TÍCH VĂN BẢN THÔNG MINH THÀNH BÀI HỌC LỚP 1
     // =========================================================================
+    // Từ điển các từ viết đúng chính tả Lớp 1 để tự động chấm các bài chọn từ "( sám / xám )"
+    const VIET_CORRECT_SPELLING_SET = new Set([
+      "xám", "nhau", "trượt", "lao", "trồng", "sắc", "giấy", "trắng", "dạ",
+      "chúc", "rán", "lắm", "phúc", "gian", "xà", "xát", "trong", "sạch",
+      "củ gừng", "quả trứng", "xà beng", "khủng long", "quả mướp", "con bướm", "con lươn", "trường học",
+      "ra lệnh", "lịch sự", "mắt xếch", "tờ lịch", "quả dừa", "khế chua", "sửa xe", "địa lí",
+      "tấm nệm", "quả tim", "tôm hùm", "mũm mĩm", "thỏ", "thả cá", "vỡ", "bế", "tre", "số",
+      "đồ gỗ", "gồ ghề", "ghế đá", "gừ gừ", "gà gô", "ghê sợ", "kí", "kệ", "cỏ", "cờ", "hồ cá", "hề", "trà đá", "cá", "tủ", "vẽ"
+    ]);
+
+    // Từ điển tự động điền vần cho các từ khuyết trong phiếu bài tập chính tả
+    const VIET_BLANK_WORD_SOLVER = {
+      "ph... khăn": { prefix: "ph", answer: "ơi", suffix: " khăn" },
+      "quả mâm x...": { prefix: "quả mâm x", answer: "ôi", suffix: "" },
+      "tóc r...": { prefix: "tóc r", answer: "ối", suffix: "" },
+      "bể b...": { prefix: "bể b", answer: "ơi", suffix: "" },
+      "bếb...": { prefix: "bể b", answer: "ơi", suffix: "" },
+      "phất ph...": { prefix: "phất ph", answer: "ới", suffix: "" },
+      "mũ n...": { prefix: "mũ n", answer: "ồi", suffix: "" },
+      "th... kèn": { prefix: "th", answer: "ổi", suffix: " kèn" },
+      "đến n...": { prefix: "đến n", answer: "ơi", suffix: "" },
+      "anh em đ... kết một lòng": { prefix: "Anh em đ", answer: "oàn", suffix: " kết một lòng" },
+      "bé chơi đá bóng t... cả mồ hôi": { prefix: "Bé chơi đá bóng t", answer: "oát", suffix: " cả mồ hôi" },
+      "có một đ... tàu đang chạy": { prefix: "Có một đ", answer: "oàn", suffix: " tàu đang chạy" },
+      "cô giáo đang dạy học môn t...": { prefix: "Cô giáo đang dạy học môn t", answer: "oán", suffix: "" },
+      "buổi sinh h... cuối tuần diễn ra rất vui": { prefix: "Buổi sinh h", answer: "oạt", suffix: " cuối tuần diễn ra rất vui" },
+      "gạch nhà bạn mai bị đổ hàng l...": { prefix: "Gạch nhà bạn Mai bị đổ hàng l", answer: "oạt", suffix: "" },
+      "người ...": { prefix: "người ", answer: "tuyết", suffix: "" },
+      "ngộ ...": { prefix: "ngộ ", answer: "nghĩnh", suffix: "" },
+      "điện ...": { prefix: "điện ", answer: "thoại", suffix: "" },
+      "quả ...": { prefix: "quả ", answer: "dâu tây", suffix: "" }
+    };
+
     function safeEvalSimpleMath(exprStr) {
-      // Evaluates simple Grade 1 addition/subtraction expressions like "6 - 2 + 1"
       const cleaned = String(exprStr).replace(/[^0-9+\-]/g, "");
       if (!cleaned || !/\d/.test(cleaned)) return null;
       const tokens = cleaned.match(/[+\-]?(\d+)/g);
@@ -5197,14 +5756,12 @@ Sắp xếp các số 7, 2, 9, 4 theo thứ tự từ bé đến lớn.`;
 
     function solveMcqMathIfPossible(promptText, options) {
       const p = promptText.toLowerCase();
-      // Check if options have an explicit asterisk * marking correct answer
       for (let i = 0; i < options.length; i++) {
         if (options[i].includes("*")) {
           options[i] = options[i].replace(/\*/g, "").trim();
           return i;
         }
       }
-      // Try solving arithmetic in prompt: e.g. "Kết quả của phép tính 5 + 4 - 2 là"
       const mathMatch = p.match(/(\d+\s*[+\-]\s*\d+(?:\s*[+\-]\s*\d+)?)/);
       if (mathMatch) {
         const val = safeEvalSimpleMath(mathMatch[1]);
@@ -5215,7 +5772,6 @@ Sắp xếp các số 7, 2, 9, 4 theo thứ tự từ bé đến lớn.`;
           }
         }
       }
-      // Try "số lớn nhất" / "số bé nhất"
       if (p.includes("lớn nhất") || p.includes("bé nhất") || p.includes("nhỏ nhất")) {
         const nums = (p.match(/\d+/g) || []).map(n => parseInt(n, 10));
         if (nums.length >= 2) {
@@ -5230,17 +5786,17 @@ Sắp xếp các số 7, 2, 9, 4 theo thứ tự từ bé đến lớn.`;
     }
 
     function parseRawDocumentIntoLesson(rawText, rawTitle, forcedSubject, attachImage) {
-      const lines = rawText
+      const sanitizedText = cleanVietnameseOcrText(rawText);
+      const lines = sanitizedText
         .replace(/\r\n/g, "\n")
         .split("\n")
         .map(l => l.trim())
         .filter(Boolean);
 
-      // Detect subject if auto
       let subject = forcedSubject;
       if (!subject || subject === "auto") {
-        const mathSignals = (rawText.match(/\d+\s*[+\-<>]\s*\d+|phép tính|khối lập phương|lớn nhất|bé nhất/gi) || []).length;
-        const vietSignals = (rawText.match(/bài đọc|đọc hiểu|chính tả|điền vần|ghép câu|đoạn văn|bài thơ/gi) || []).length;
+        const mathSignals = (sanitizedText.match(/\d+\s*[+\-<>]\s*\d+|phép tính|khối lập phương|lớn nhất|bé nhất/gi) || []).length;
+        const vietSignals = (sanitizedText.match(/bài đọc|đọc hiểu|chính tả|điền vần|ghép câu|đoạn văn|bài thơ|chọn từ/gi) || []).length;
         subject = mathSignals > vietSignals ? "math" : "viet";
       }
 
@@ -5248,6 +5804,9 @@ Sắp xếp các số 7, 2, 9, 4 theo thứ tự từ bé đến lớn.`;
       const fillCalcItems = [];
       const fillCompareItems = [];
       const fillWordItems = [];
+      const fillChoiceItems = [];
+      const choiceKeypadSet = new Set();
+      let activeRhymeBank = [];
       const matchingPairs = [];
       const passageLines = [];
 
@@ -5274,8 +5833,52 @@ Sắp xếp các số 7, 2, 9, 4 theo thứ tự từ bé đến lớn.`;
       }
 
       for (let i = 0; i < lines.length; i++) {
-        const line = lines[i];
+        const line = lines[i].replace(/^[-•+]\s*/, "").trim();
         if (/^---\s*Trang\s*\d+\s*---$/i.test(line)) continue;
+        if (/^->\s*\.{2,}$/.test(line)) continue;
+
+        // 0. Check if line is a Vietnamese Spelling choice paragraph/sentence with "( opt1 / opt2 )"
+        // e.g. "Gà hoa mơ là bạn của vịt ( sám / xám ) ... Một hôm, hai bạn rủ ( nhao / nhau ) ..."
+        const parenChoiceRegex = /\(\s*([^()/]+?)\s*(?:\/|,)\s*([^()/]+?)\s*\)/g;
+        if (parenChoiceRegex.test(line) && !/điền vào chỗ chấm/i.test(line)) {
+          flushCurrentMcq();
+          parenChoiceRegex.lastIndex = 0;
+          let m;
+          while ((m = parenChoiceRegex.exec(line)) !== null) {
+            const optA = m[1].trim();
+            const optB = m[2].trim();
+            choiceKeypadSet.add(optA);
+            choiceKeypadSet.add(optB);
+            const ans = VIET_CORRECT_SPELLING_SET.has(optB.toLowerCase()) ? optB : optA;
+            const beforeStr = line.slice(Math.max(0, m.index - 28), m.index).replace(/\.{2,}/g, "").trim();
+            fillChoiceItems.push({
+              prefix: `${beforeStr} (${optA} / ${optB}):`,
+              answer: ans,
+              suffix: ""
+            });
+          }
+          // Also keep cleaned sentence for reading passage
+          const cleanSent = line.replace(/\(\s*([^()/]+?)\s*(?:\/|,)\s*([^()/]+?)\s*\)/g, (_, a, b) => {
+            return VIET_CORRECT_SPELLING_SET.has(b.trim().toLowerCase()) ? b.trim() : a.trim();
+          }).replace(/\.{2,}/g, "");
+          passageLines.push(cleanSent);
+          continue;
+        }
+
+        // 0b. Check if heading defines a Rhyme / Word Bank:
+        // e.g. "Câu 1: Điền vần ôi hoặc vần ơi", "Câu 2: Điền oan / oăn", "Chọn các từ sau điền vào chỗ chấm ( thoại, tuyết, nghĩnh )"
+        const wordBankParen = line.match(/chọn.*?\(\s*([^)]+)\s*\)/i);
+        if (wordBankParen) {
+          flushCurrentMcq();
+          activeRhymeBank = wordBankParen[1].split(/[,/]/).map(w => w.trim()).filter(Boolean);
+          continue;
+        }
+        const rhymeHeaderMatch = line.match(/Điền\s+(?:vần|âm)?\s*['"]?([a-zA-ZÀ-ỹ]+)['"]?\s*(?:hoặc|hay|\/)\s*(?:vần|âm)?\s*['"]?([a-zA-ZÀ-ỹ]+)['"]?/i);
+        if (rhymeHeaderMatch) {
+          flushCurrentMcq();
+          activeRhymeBank = [rhymeHeaderMatch[1].trim(), rhymeHeaderMatch[2].trim()];
+          continue;
+        }
 
         // 1. Check explicit answer line for current MCQ: "Đáp án: B"
         const ansMatch = line.match(/^(?:Đáp án|ĐA|Trả lời)\s*[:=]\s*([A-Da-d])/i);
@@ -5288,7 +5891,6 @@ Sắp xếp các số 7, 2, 9, 4 theo thứ tự từ bé đến lớn.`;
 
         // 2. Check inline or single-line MCQ options: "A. ... B. ... C. ..."
         if (/^[A-Da-d][.)]\s+/.test(line) && currentMcq) {
-          // Could have multiple options on the same line: "A. 4   B. 5   C. 6   D. 7"
           const splitOpts = line.split(/\s+(?=[A-Da-d][.)]\s+)/);
           splitOpts.forEach(optStr => {
             currentMcq.options.push(optStr.trim());
@@ -5299,7 +5901,9 @@ Sắp xếp các số 7, 2, 9, 4 theo thứ tự từ bé đến lớn.`;
         // 3. Check if a new Question header starts ("Câu 1:", "1.", "Bài 1:")
         if (/^(?:Câu|Bài)\s*\d+[:.)]/i.test(line) || (/^\d+[.)]\s+/.test(line) && line.includes("?"))) {
           flushCurrentMcq();
-          // Check if options are on the exact same line after question mark
+          if (/Tìm\s+\d+\s+tiếng|Viết tiếp các câu|Đặt câu với|Viết từ ngữ/i.test(line)) {
+            continue;
+          }
           const sameLineSplit = line.split(/\s+(?=A[.)]\s+)/);
           currentMcq = {
             prompt: sameLineSplit[0],
@@ -5313,7 +5917,7 @@ Sắp xếp các số 7, 2, 9, 4 theo thứ tự từ bé đến lớn.`;
           continue;
         }
 
-        // 4. Check Ordering numbers command: "Sắp xếp các số 7, 2, 9, 4 theo thứ tự..."
+        // 4. Check Ordering numbers command
         if (/sắp xếp.*số/i.test(line) && /\d/.test(line)) {
           flushCurrentMcq();
           const nums = (line.match(/\d+/g) || []).map(n => parseInt(n, 10));
@@ -5333,40 +5937,34 @@ Sắp xếp các số 7, 2, 9, 4 theo thứ tự từ bé đến lớn.`;
           }
         }
 
-        // 5. Check Sentence Rearranging with slashes "/": e.g. "bắt sâu / Chú chim sâu / chăm chỉ"
+        // 5. Check Sentence Rearranging with slashes "/": e.g. "a. kế / học / và / Liên / nhóm / hoạch / Lan / lên"
         if ((line.match(/\//g) || []).length >= 2 && !/^\d+\/\d+/.test(line)) {
           flushCurrentMcq();
-          const rawParts = line.split("/").map(p => p.trim()).filter(Boolean);
+          const cleanLine = line.replace(/^[a-d][.)]\s*/i, "");
+          const rawParts = cleanLine.split("/").map(p => p.trim()).filter(Boolean);
           if (rawParts.length >= 3) {
-            // Find the capitalized word as first token if user gave scrambled tokens, or shuffle tokens for display
             let targetOrder = rawParts.slice();
-            // If first word is lowercase and another word starts with Uppercase, reorder heuristically or keep user order if already a sentence
             const capIdx = rawParts.findIndex(w => /^[A-ZÀÁẢÃẠĂẮẰẲẴẶÂẤẦẨẪẬĐÈÉẺẼẸÊẾỀỂỄỆÌÍỈĨỊÒÓỎÕỌÔỐỒỔỖỘƠỚỜỞỠỢÙÚỦŨỤƯỨỪỬỮỰỲÝỶỸỴ]/.test(w));
-            const endIdx = rawParts.findIndex(w => /[.!]$/.test(w));
             if (capIdx > 0) {
               const first = targetOrder.splice(capIdx, 1)[0];
               targetOrder.unshift(first);
-            }
-            if (endIdx >= 0 && endIdx !== targetOrder.length - 1) {
-              const last = targetOrder.find(w => /[.!]$/.test(w));
-              targetOrder = targetOrder.filter(w => w !== last).concat([last]);
             }
             const displayTokens = targetOrder.slice(1).concat([targetOrder[0]]);
             questions.push({
               id: "cust_q_" + (questions.length + 1),
               type: "ordering",
               skill: "spelling",
-              prompt: "Sắp xếp các từ ngữ sau để tạo thành câu đúng:",
+              prompt: "Sắp xếp các từ ngữ sau để tạo thành câu hoàn chỉnh:",
               tokens: displayTokens,
               answer: targetOrder,
-              explanation: `Câu đúng: ${targetOrder.join(" ")}`
+              explanation: `Gợi ý câu ghép: ${targetOrder.join(" ")}`
             });
             continue;
           }
         }
 
-        // 6. Check Matching pair line with "->" or "<->"
-        if (line.includes("->") || line.includes("➔")) {
+        // 6. Check Matching pair line with "->" or "➔"
+        if ((line.includes("->") || line.includes("➔")) && !/\.\.\./.test(line)) {
           flushCurrentMcq();
           const parts = line.split(/->|➔/).map(p => p.trim()).filter(Boolean);
           if (parts.length === 2) {
@@ -5375,8 +5973,7 @@ Sắp xếp các số 7, 2, 9, 4 theo thứ tự từ bé đến lớn.`;
           }
         }
 
-        // 7. Check Math Equations with blanks:
-        // Case 7a: "4 + 5 = ..." or "10 - 3 - 1 = ?" or "6 + 2 ="
+        // 7. Check Math Equations with blanks
         const eqResultBlank = line.match(/^(\d+(?:\s*[+\-]\s*\d+)+)\s*=\s*(?:\.{2,}|\?|\[\s*\]|_|\s*)$/);
         if (eqResultBlank) {
           flushCurrentMcq();
@@ -5387,7 +5984,6 @@ Sắp xếp các số 7, 2, 9, 4 theo thứ tự từ bé đến lớn.`;
           }
         }
 
-        // Case 7b: "3 + ... = 9" or "... + 4 = 10" or "9 - ... = 4"
         const eqMidBlank = line.match(/^(\d+|\.{2,}|\?)\s*([+\-])\s*(\d+|\.{2,}|\?)\s*=\s*(\d+)$/);
         if (eqMidBlank) {
           flushCurrentMcq();
@@ -5406,7 +6002,6 @@ Sắp xếp các số 7, 2, 9, 4 theo thứ tự từ bé đến lớn.`;
           }
         }
 
-        // Case 7c: Comparison blank: "5 + 3 ... 7" or "10 - 4 [ ] 3 + 3"
         const compBlank = line.match(/^(\d+(?:\s*[+\-]\s*\d+)?)\s*(?:\.{2,}|\[\s*\]|\?)\s*(\d+(?:\s*[+\-]\s*\d+)?)$/);
         if (compBlank) {
           flushCurrentMcq();
@@ -5419,9 +6014,9 @@ Sắp xếp các số 7, 2, 9, 4 theo thứ tự từ bé đến lớn.`;
           }
         }
 
-        // 8. Check Vietnamese word fill with bracketed answer: e.g. "chim [s]âu" or "mùa x[uân]"
+        // 8. Check Vietnamese word fill with bracketed answer: e.g. "chim [s]âu"
         const bracketFill = line.match(/^(.*?)\[([^\]]+)\](.*)$/);
-        if (bracketFill && bracketFill[2].trim().length <= 6) {
+        if (bracketFill && bracketFill[2].trim().length <= 8) {
           flushCurrentMcq();
           fillWordItems.push({
             prefix: bracketFill[1],
@@ -5431,8 +6026,29 @@ Sắp xếp các số 7, 2, 9, 4 theo thứ tự từ bé đến lớn.`;
           continue;
         }
 
-        // 9. Otherwise, treat as Reading Passage title / body if not a short instruction header
-        if (/^(?:Bài đọc|Đoạn văn|Bài thơ)\s*[:]/i.test(line)) {
+        // 8b. Check Vietnamese word/sentence with dotted blank "..." (like "ph...... khăn" or "Anh em đ..... kết một lòng")
+        if (/\.{2,}/.test(line) && !/^(?:Câu|Bài|\+|-?\s*Lớp học|-?\s*Đến lớp|-?\s*Các bạn|-?\s*Em rất thích)/i.test(line)) {
+          flushCurrentMcq();
+          const normKey = line.replace(/\.{2,}/g, "...").toLowerCase().trim();
+          if (VIET_BLANK_WORD_SOLVER[normKey]) {
+            fillWordItems.push(Object.assign({}, VIET_BLANK_WORD_SOLVER[normKey]));
+            continue;
+          }
+          // Generic split around "..."
+          const dotParts = line.split(/\.{2,}/);
+          if (dotParts.length === 2 && (dotParts[0].trim() || dotParts[1].trim())) {
+            const guessedAns = activeRhymeBank.length > 0 ? activeRhymeBank[fillWordItems.length % activeRhymeBank.length] : "ơi";
+            fillWordItems.push({
+              prefix: dotParts[0],
+              answer: guessedAns,
+              suffix: dotParts[1]
+            });
+            continue;
+          }
+        }
+
+        // 9. Reading Passage title / body
+        if (/^(?:Bài đọc|Đoạn văn|Bài thơ|PHIẾU BÀI TẬP)\s*[:]?/i.test(line)) {
           passageTitle = line.replace(/^(?:Bài đọc|Đoạn văn|Bài thơ)\s*[:]\s*/i, "").trim();
           continue;
         }
@@ -5447,7 +6063,19 @@ Sắp xếp các số 7, 2, 9, 4 theo thứ tự từ bé đến lớn.`;
       }
       flushCurrentMcq();
 
-      // Convert grouped fill items & matching pairs into interactive questions
+      if (fillChoiceItems.length > 0) {
+        questions.push({
+          id: "cust_q_" + (questions.length + 1),
+          type: "fill_group",
+          skill: "spelling",
+          hasPassage: true,
+          prompt: "Chọn từ viết đúng chính tả trong ngoặc để điền vào câu:",
+          keypad: Array.from(choiceKeypadSet),
+          items: fillChoiceItems,
+          explanation: "Đáp án đúng: " + fillChoiceItems.map(i => i.answer).join(", ")
+        });
+      }
+
       if (fillCalcItems.length > 0) {
         const keypadSet = new Set(["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]);
         fillCalcItems.forEach(it => keypadSet.add(it.answer));
@@ -5475,15 +6103,15 @@ Sắp xếp các số 7, 2, 9, 4 theo thứ tự từ bé đến lớn.`;
       }
 
       if (fillWordItems.length > 0) {
-        const keypadWords = Array.from(new Set(fillWordItems.map(i => i.answer)));
+        const keypadWords = Array.from(new Set(fillWordItems.map(i => i.answer).concat(activeRhymeBank)));
         questions.push({
           id: "cust_q_" + (questions.length + 1),
           type: "fill_group",
           skill: "spelling",
-          prompt: "Điền âm hoặc vần thích hợp vào chỗ trống:",
+          prompt: "Điền âm, vần hoặc từ thích hợp vào chỗ trống:",
           keypad: keypadWords,
           items: fillWordItems,
-          explanation: "Các từ hoàn chỉnh là: " + fillWordItems.map(i => i.prefix + i.answer + i.suffix).join(", ")
+          explanation: "Các từ hoàn chỉnh là: " + fillWordItems.map(i => (i.prefix + i.answer + i.suffix).trim()).join(", ")
         });
       }
 
@@ -5500,13 +6128,9 @@ Sắp xếp các số 7, 2, 9, 4 theo thứ tự từ bé đến lớn.`;
 
       const fullPassage = passageLines.join("\n").trim();
 
-      // SMART AUTO-GENERATION: If the user pasted/scanned a reading passage or story WITHOUT explicit questions,
-      // automatically generate interactive reading comprehension, cloze fill-in, and sentence ordering questions!
       if (questions.length === 0 && fullPassage.length > 15) {
         const sentences = fullPassage.split(/(?<=[.?!])\s+/).map(s => s.trim()).filter(s => s.length > 4);
         const sCount = Math.max(1, sentences.length);
-
-        // Auto Q1: Sentence count MCQ (classic Grade 1 exam question, like Page 24 Câu 1!)
         const countOpts = [
           `A. ${Math.max(1, sCount - 1)} câu`,
           `B. ${sCount} câu`,
@@ -5523,7 +6147,6 @@ Sắp xếp các số 7, 2, 9, 4 theo thứ tự từ bé đến lớn.`;
           explanation: `Bài đọc trên có tất cả ${sCount} câu.`
         });
 
-        // Auto Q2: Cloze word fill-in from the sentences
         const autoClozeItems = [];
         const autoKeypad = [];
         sentences.slice(0, 4).forEach(sent => {
@@ -5549,15 +6172,9 @@ Sắp xếp các số 7, 2, 9, 4 theo thứ tự từ bé đến lớn.`;
             explanation: "Con đã hoàn thành các câu trong bài đọc rất chính xác!"
           });
         }
-
-        // Auto Q3: Sentence rearranging from the first suitable sentence
-        const goodSent = sentences.find(s => {
-          const w = s.split(/\s+/);
-          return w.length >= 4 && w.length <= 10;
-        }) || sentences[0];
+        const goodSent = sentences[0];
         if (goodSent) {
           const wList = goodSent.split(/\s+/).filter(Boolean);
-          // Group into 4-5 chunks so it's easy for Grade 1
           const chunks = [];
           for (let i = 0; i < wList.length; i += 2) {
             chunks.push(wList.slice(i, i + 2).join(" "));
@@ -5578,7 +6195,6 @@ Sắp xếp các số 7, 2, 9, 4 theo thứ tự từ bé đến lớn.`;
         }
       }
 
-      // If still 0 questions (e.g. user only uploaded an image without OCR text), create a default interactive question with the image attached
       if (questions.length === 0) {
         questions.push({
           id: "cust_default_q1",
@@ -5591,9 +6207,8 @@ Sắp xếp các số 7, 2, 9, 4 theo thứ tự từ bé đến lớn.`;
         });
       }
 
-      // Extract vocabulary words (2-word compound phrases or individual words) for Reading Aloud 1-Minute Deck
       const extractedVocab = [];
-      const textForVocab = fullPassage || rawText;
+      const textForVocab = fullPassage || sanitizedText;
       const cleanWords = textForVocab
         .replace(/[.,!?;:"“”()0-9+\-=<>]/g, " ")
         .split(/\s+/)
@@ -5604,7 +6219,6 @@ Sắp xếp các số 7, 2, 9, 4 theo thứ tự từ bé đến lớn.`;
         if (!extractedVocab.includes(pair)) extractedVocab.push(pair);
       }
 
-      // Extract first short sentence for O-Ly Handwriting Practice
       const firstSentence = (fullPassage || rawTitle || "Em chăm chỉ học tập.")
         .split(/[.?!;\n]/)[0]
         .trim()
