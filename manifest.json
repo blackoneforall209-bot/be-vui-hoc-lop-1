@@ -1,0 +1,21 @@
+{
+  "short_name": "Bé Vui Học 1",
+  "name": "Bé Vui Học Lớp 1 - Ôn Tập Toán & Tiếng Việt",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "icon-512.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "index.html",
+  "background_color": "#FFFBEB",
+  "theme_color": "#D97706",
+  "display": "standalone",
+  "orientation": "any"
+}

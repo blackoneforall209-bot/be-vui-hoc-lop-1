@@ -2593,7 +2593,43 @@
 
     let ttsResumeTimer = null;
 
+    // Check if Native Android Capacitor TextToSpeech plugin is loaded
+    function getCapacitorNativeTTS() {
+      if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.TextToSpeech) {
+        return window.Capacitor.Plugins.TextToSpeech;
+      }
+      return null;
+    }
+
+    async function speakViaNativeCapacitor(cleanText) {
+      const nativeTts = getCapacitorNativeTTS();
+      if (!nativeTts) return false;
+      try {
+        await nativeTts.stop();
+        await nativeTts.speak({
+          text: cleanText,
+          lang: "vi-VN",
+          rate: appState.voiceSpeed || 0.95,
+          pitch: 1.0,
+          volume: 1.0,
+          category: "ambient"
+        });
+        return true;
+      } catch (err) {
+        console.warn("Native TTS error, falling back to Webview:", err);
+        return false;
+      }
+    }
+
     function speakViaLocalSynthesis(cleanText) {
+      // 1. Try Native Android TTS first (100% works on Samsung Tab S8 & S23 Ultra without WebView limitations!)
+      const nativeTts = getCapacitorNativeTTS();
+      if (nativeTts) {
+        speakViaNativeCapacitor(cleanText);
+        return;
+      }
+
+      // 2. Web Speech API fallback for Chrome Browser / Web
       if (!("speechSynthesis" in window)) {
         playSoundClick();
         return;
@@ -2612,7 +2648,6 @@
       }
 
       const bestVoice = pickBestVietnameseVoice();
-      // On Android Samsung, speaking directly with lang = "vi-VN" invokes Google Speech Engine directly!
       const utter = new SpeechSynthesisUtterance(cleanText);
       utter.lang = "vi-VN";
       if (bestVoice) {
@@ -2622,19 +2657,17 @@
       utter.pitch = 1.0;
 
       utter.onstart = () => {
-        // Unmute and actively resume synthesis on Samsung devices
         try { window.speechSynthesis.resume(); } catch (e) {}
       };
 
       utter.onerror = (e) => {
-        console.warn("Android TTS Error:", e);
+        console.warn("TTS Error:", e);
         try { window.speechSynthesis.resume(); } catch (err) {}
       };
 
       window.speechSynthesis.speak(utter);
       try { window.speechSynthesis.resume(); } catch (e) {}
 
-      // Keep speech synthesis active on Android Chrome/WebView so Android OS does not suspend it mid-speech
       ttsResumeTimer = setInterval(() => {
         if (!window.speechSynthesis.speaking) {
           clearInterval(ttsResumeTimer);
