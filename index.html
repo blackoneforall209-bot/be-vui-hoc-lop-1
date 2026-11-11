@@ -2422,16 +2422,39 @@
       if (window.speechSynthesis.onvoiceschanged !== undefined) {
         window.speechSynthesis.onvoiceschanged = refreshAvailableVoices;
       }
+      // Periodically refresh voice cache during the first 10 seconds of app launch (vital for Android WebView!)
+      let voiceChecks = 0;
+      const voiceInterval = setInterval(() => {
+        voiceChecks++;
+        refreshAvailableVoices();
+        if (getVietnameseVoices().length > 0 || voiceChecks > 8) {
+          clearInterval(voiceInterval);
+        }
+      }, 1200);
     }
 
     function getVietnameseVoices() {
-      if (!availableVoices.length && "speechSynthesis" in window) {
-        availableVoices = window.speechSynthesis.getVoices() || [];
+      if ("speechSynthesis" in window) {
+        const currentVoices = window.speechSynthesis.getVoices();
+        if (currentVoices && currentVoices.length > 0) {
+          availableVoices = currentVoices;
+        }
       }
-      return availableVoices.filter(v => {
-        const lang = (v.lang || "").toLowerCase();
+      return (availableVoices || []).filter(v => {
+        const lang = (v.lang || "").toLowerCase().replace(/_/g, "-");
         const name = (v.name || "").toLowerCase();
-        return lang.includes("vi") || name.includes("viet") || name.includes("tiếng việt") || name.includes("hoaimy") || name.includes("namminh") || name.includes("linh") || name.includes("an");
+        return (
+          lang === "vi" ||
+          lang.startsWith("vi-") ||
+          lang.includes("vie") ||
+          name.includes("vietnam") ||
+          name.includes("tiếng việt") ||
+          name.includes("vietnamese") ||
+          name.includes("hoaimy") ||
+          name.includes("namminh") ||
+          name.includes("linh") ||
+          name.includes("an")
+        );
       });
     }
 
@@ -2568,25 +2591,58 @@
       return chunks.length ? chunks : [text];
     }
 
+    let ttsResumeTimer = null;
+
     function speakViaLocalSynthesis(cleanText) {
       if (!("speechSynthesis" in window)) {
         playSoundClick();
         return;
       }
-      window.speechSynthesis.cancel();
-      const bestVoice = pickBestVietnameseVoice();
-      const chunks = splitTextIntoChunks(cleanText, 180);
 
-      chunks.forEach(chunk => {
-        const utter = new SpeechSynthesisUtterance(chunk);
-        utter.lang = bestVoice ? bestVoice.lang : "vi-VN";
-        if (bestVoice) {
-          utter.voice = bestVoice;
+      try {
+        if (window.speechSynthesis.paused) {
+          window.speechSynthesis.resume();
         }
-        utter.rate = appState.voiceSpeed || 0.92;
-        utter.pitch = 1.0;
-        window.speechSynthesis.speak(utter);
-      });
+        window.speechSynthesis.cancel();
+      } catch (e) {}
+
+      if (ttsResumeTimer) {
+        clearInterval(ttsResumeTimer);
+        ttsResumeTimer = null;
+      }
+
+      const bestVoice = pickBestVietnameseVoice();
+      // On Android Samsung, speaking directly with lang = "vi-VN" invokes Google Speech Engine directly!
+      const utter = new SpeechSynthesisUtterance(cleanText);
+      utter.lang = "vi-VN";
+      if (bestVoice) {
+        utter.voice = bestVoice;
+      }
+      utter.rate = appState.voiceSpeed || 0.92;
+      utter.pitch = 1.0;
+
+      utter.onstart = () => {
+        // Unmute and actively resume synthesis on Samsung devices
+        try { window.speechSynthesis.resume(); } catch (e) {}
+      };
+
+      utter.onerror = (e) => {
+        console.warn("Android TTS Error:", e);
+        try { window.speechSynthesis.resume(); } catch (err) {}
+      };
+
+      window.speechSynthesis.speak(utter);
+      try { window.speechSynthesis.resume(); } catch (e) {}
+
+      // Keep speech synthesis active on Android Chrome/WebView so Android OS does not suspend it mid-speech
+      ttsResumeTimer = setInterval(() => {
+        if (!window.speechSynthesis.speaking) {
+          clearInterval(ttsResumeTimer);
+          ttsResumeTimer = null;
+        } else if (window.speechSynthesis.paused) {
+          window.speechSynthesis.resume();
+        }
+      }, 350);
     }
 
     let activeAudioInstance = null;
@@ -2672,26 +2728,16 @@
       const clean = normalizeVietnameseForSpeech(text);
       if (!clean) return;
 
-      const bestLocalVi = pickBestVietnameseVoice();
       const mode = appState.voiceEngineMode || "auto";
 
       if (mode === "cloud") {
         speakViaCloudStream(clean, true);
       } else if (mode === "local") {
-        if (bestLocalVi) {
-          speakViaLocalSynthesis(clean);
-        } else {
-          // If no local Vietnamese voice installed on device, alert user and play via Cloud
-          showToast("Thiết bị chưa có giọng Tiếng Việt máy. Bấm '🎙️ Giọng đọc' ở góc trên để xem hướng dẫn cài đặt!", "🎙️");
-          speakViaCloudStream(clean, false);
-        }
+        speakViaLocalSynthesis(clean);
       } else {
-        // Auto mode: If high quality local voice exists, use it. Otherwise, try cloud stream, and if cloud stream fails, fallback to local synthesis
-        if (bestLocalVi) {
-          speakViaLocalSynthesis(clean);
-        } else {
-          speakViaCloudStream(clean, true);
-        }
+        // Auto mode on Android: Since user configured Google Speech Engine, ALWAYS speak locally first!
+        // Local synthesis via SpeechSynthesisUtterance('vi-VN') is 100% offline, native and instant!
+        speakViaLocalSynthesis(clean);
       }
     }
 
