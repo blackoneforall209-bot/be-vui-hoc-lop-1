@@ -1067,6 +1067,21 @@
         <button id="btnCloseVoiceModalTop" onclick="closeVoiceModal()" class="w-9 h-9 rounded-xl bg-slate-100 text-slate-600 font-black text-base btn-3d">✕</button>
       </div>
 
+      <!-- Samsung & Android Text-to-Speech Quick Guide Banner -->
+      <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-3.5 space-y-2 text-xs">
+        <div class="flex items-center gap-2 text-amber-950 font-black text-xs sm:text-sm">
+          <span>💡</span><span>Máy Samsung (Tab S8 / S23 Ultra) chưa có tiếng?</span>
+        </div>
+        <p class="font-semibold text-slate-700 leading-relaxed">
+          Mặc định máy Samsung dùng công cụ <i>"Samsung Text-to-Speech"</i> (không có tiếng Việt). Bạn chỉ cần cài thêm giọng Tiếng Việt miễn phí của Google theo 3 bước:
+        </p>
+        <div class="bg-white p-2.5 rounded-xl border border-amber-200 space-y-1 font-bold text-slate-800">
+          <div>1️⃣ Vào <b>Cài đặt máy (Settings)</b> ➔ <b>Quản lý chung (General management)</b> ➔ <b>Chuyển văn bản thành giọng nói (Text-to-speech)</b>.</div>
+          <div>2️⃣ Ở mục <b>Công cụ ưa thích (Preferred engine)</b>: Chuyển từ <i>Samsung</i> sang <b>Dịch vụ giọng nói của Google (Speech Services by Google)</b>.</div>
+          <div>3️⃣ Bấm biểu tượng ⚙️ (Cài đặt) bên cạnh ➔ Chọn <b>Cài đặt dữ liệu giọng nói</b> ➔ Tải gói <b>Tiếng Việt (Vietnam)</b>.</div>
+        </div>
+      </div>
+
       <!-- 1. Chế độ nguồn giọng -->
       <div class="space-y-1.5">
         <label class="block text-xs font-black uppercase text-slate-500">1. Chọn nguồn giọng đọc:</label>
@@ -2510,6 +2525,11 @@
       try {
         activeCloudAudioQueue = [];
         isCloudPlaying = false;
+        if (activeAudioInstance) {
+          activeAudioInstance.pause();
+          activeAudioInstance.src = "";
+          activeAudioInstance = null;
+        }
         const audioEl = document.getElementById("cloudTtsAudio");
         if (audioEl) {
           audioEl.pause();
@@ -2569,13 +2589,10 @@
       });
     }
 
+    let activeAudioInstance = null;
+
     function speakViaCloudStream(cleanText, fallbackToLocal = true) {
-      const audioEl = document.getElementById("cloudTtsAudio");
-      if (!audioEl) {
-        speakViaLocalSynthesis(cleanText);
-        return;
-      }
-      const chunks = splitTextIntoChunks(cleanText, 150);
+      const chunks = splitTextIntoChunks(cleanText, 140);
       activeCloudAudioQueue = chunks.slice();
       isCloudPlaying = true;
 
@@ -2585,29 +2602,62 @@
           return;
         }
         const nextText = activeCloudAudioQueue.shift();
-        const url = "https://translate.googleapis.com/translate_tts?ie=UTF-8&tl=vi&client=tw-ob&q=" + encodeURIComponent(nextText);
-        audioEl.src = url;
-        audioEl.playbackRate = appState.voiceSpeed || 0.92;
-        audioEl.onended = () => {
-          playNextChunk();
-        };
-        audioEl.onerror = () => {
-          isCloudPlaying = false;
-          activeCloudAudioQueue = [];
-          if (fallbackToLocal) {
-            speakViaLocalSynthesis(cleanText);
+        const encoded = encodeURIComponent(nextText);
+        // Primary URL + Fallback URL for Android WebView
+        const streamUrls = [
+          "https://translate.googleapis.com/translate_tts?ie=UTF-8&tl=vi&client=tw-ob&q=" + encoded,
+          "https://translate.google.com/translate_tts?ie=UTF-8&tl=vi&client=gtx&q=" + encoded
+        ];
+
+        let urlIdx = 0;
+
+        function tryPlayUrl() {
+          if (activeAudioInstance) {
+            try {
+              activeAudioInstance.pause();
+              activeAudioInstance.src = "";
+            } catch (e) {}
           }
-        };
-        const playPromise = audioEl.play();
-        if (playPromise !== undefined) {
-          playPromise.catch(() => {
-            isCloudPlaying = false;
-            activeCloudAudioQueue = [];
-            if (fallbackToLocal) {
-              speakViaLocalSynthesis(cleanText);
+          const snd = new Audio();
+          activeAudioInstance = snd;
+          snd.playbackRate = appState.voiceSpeed || 0.92;
+
+          snd.onended = () => {
+            playNextChunk();
+          };
+
+          snd.onerror = () => {
+            urlIdx++;
+            if (urlIdx < streamUrls.length) {
+              tryPlayUrl();
+            } else {
+              isCloudPlaying = false;
+              activeCloudAudioQueue = [];
+              if (fallbackToLocal) {
+                speakViaLocalSynthesis(cleanText);
+              }
             }
-          });
+          };
+
+          snd.src = streamUrls[urlIdx];
+          const p = snd.play();
+          if (p !== undefined) {
+            p.catch((err) => {
+              urlIdx++;
+              if (urlIdx < streamUrls.length) {
+                tryPlayUrl();
+              } else {
+                isCloudPlaying = false;
+                activeCloudAudioQueue = [];
+                if (fallbackToLocal) {
+                  speakViaLocalSynthesis(cleanText);
+                }
+              }
+            });
+          }
         }
+
+        tryPlayUrl();
       }
 
       playNextChunk();
@@ -2631,10 +2681,13 @@
         if (bestLocalVi) {
           speakViaLocalSynthesis(clean);
         } else {
-          speakViaCloudStream(clean, true);
+          // If no local Vietnamese voice installed on device, alert user and play via Cloud
+          showToast("Thiết bị chưa có giọng Tiếng Việt máy. Bấm '🎙️ Giọng đọc' ở góc trên để xem hướng dẫn cài đặt!", "🎙️");
+          speakViaCloudStream(clean, false);
         }
       } else {
-        if (bestLocalVi && ((bestLocalVi.name || "").toLowerCase().includes("hoaimy") || (bestLocalVi.name || "").toLowerCase().includes("google") || (bestLocalVi.name || "").toLowerCase().includes("linh"))) {
+        // Auto mode: If high quality local voice exists, use it. Otherwise, try cloud stream, and if cloud stream fails, fallback to local synthesis
+        if (bestLocalVi) {
           speakViaLocalSynthesis(clean);
         } else {
           speakViaCloudStream(clean, true);
