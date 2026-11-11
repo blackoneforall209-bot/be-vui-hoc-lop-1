@@ -1,14 +1,13 @@
 {
   "name": "be-vui-hoc-lop-1",
-  "version": "1.2.0",
+  "version": "1.3.0",
   "description": "Ứng dụng Ôn tập Toán & Tiếng Việt Lớp 1 cho máy tính bảng và điện thoại Android",
   "scripts": {
-    "capacitor:sync:after": "node patch_android_native.js",
-    "build:android": "npx cap sync android",
+    "postinstall": "node patch_android_native.js",
+    "build:android": "npx cap sync android && node patch_android_native.js",
     "open:android": "npx cap open android"
   },
   "dependencies": {
-    "@capacitor-community/text-to-speech": "^6.0.0",
     "@capacitor/android": "^6.1.2",
     "@capacitor/core": "^6.1.2"
   },
