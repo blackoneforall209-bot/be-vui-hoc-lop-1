@@ -3,7 +3,7 @@ const path = require('path');
 const child_process = require('child_process');
 
 try {
-  console.log('=== [1/4] Checking root index.html vs www/index.html ===');
+  console.log('=== [1/4] Syncing root index.html -> www/index.html ===');
   const rootIndex = path.join(__dirname, 'index.html');
   const wwwDir = path.join(__dirname, 'www');
   const wwwIndex = path.join(wwwDir, 'index.html');
@@ -12,22 +12,23 @@ try {
     fs.mkdirSync(wwwDir, { recursive: true });
   }
 
-  // If user uploaded index.html to the repo root, copy it into www/index.html if it contains our latest meta tag
+  // Always copy root index.html to www/index.html if root index.html is newer or has v2.0 Native Audio
   if (fs.existsSync(rootIndex)) {
     const rootContent = fs.readFileSync(rootIndex, 'utf8');
-    if (rootContent.includes('no-referrer') || !fs.existsSync(wwwIndex)) {
+    if (rootContent.includes('v2.0 Native Audio') || rootContent.includes('no-referrer') || !fs.existsSync(wwwIndex)) {
       fs.copyFileSync(rootIndex, wwwIndex);
-      console.log('Copied root index.html into www/index.html');
+      console.log('Successfully synced root index.html -> www/index.html');
     }
   }
 
   console.log('=== [2/4] Ensuring Android platform directory exists ===');
   const androidDir = path.join(__dirname, 'android');
+  const capBin = path.join(__dirname, 'node_modules', '.bin', 'cap');
   if (!fs.existsSync(androidDir)) {
-    console.log('Running npx cap add android...');
-    const capBin = path.join(__dirname, 'node_modules', '.bin', 'cap');
+    console.log('Creating Android project via Capacitor...');
     child_process.execSync(`"${capBin}" add android`, { stdio: 'inherit', cwd: __dirname });
   }
+  child_process.execSync(`"${capBin}" copy android`, { stdio: 'inherit', cwd: __dirname });
 
   console.log('=== [3/4] Patching AndroidManifest.xml with TTS_SERVICE <queries> ===');
   const manifestPath = path.join(__dirname, 'android', 'app', 'src', 'main', 'AndroidManifest.xml');
@@ -49,11 +50,12 @@ try {
     }
   }
 
-  console.log('=== [4/4] Patching MainActivity.java with Native Android TTS Bridge ===');
+  console.log('=== [4/4] Patching MainActivity.java with Native Android TTS Bridge + webView.reload() ===');
   const mainActivityPath = path.join(__dirname, 'android', 'app', 'src', 'main', 'java', 'com', 'behocvui', 'lop1', 'MainActivity.java');
   if (fs.existsSync(mainActivityPath)) {
     const javaCode = `package com.behocvui.lop1;
 
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.speech.tts.TextToSpeech;
 import android.webkit.JavascriptInterface;
@@ -71,36 +73,45 @@ public class MainActivity extends BridgeActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setVolumeControlStream(AudioManager.STREAM_MUSIC);
 
-        initGoogleTtsEngine();
+        initSystemTtsEngine();
 
         if (this.bridge != null && this.bridge.getWebView() != null) {
-            WebView webView = this.bridge.getWebView();
+            final WebView webView = this.bridge.getWebView();
             WebSettings settings = webView.getSettings();
             settings.setMediaPlaybackRequiresUserGesture(false);
             settings.setDomStorageEnabled(true);
             webView.addJavascriptInterface(new WebAppTTSInterface(), "AndroidNativeTTS");
+            // CRITICAL: Reload once so Android WebView injects AndroidNativeTTS into the page!
+            webView.post(new Runnable() {
+                @Override
+                public void run() {
+                    webView.reload();
+                }
+            });
         }
     }
 
-    private void initGoogleTtsEngine() {
+    private void initSystemTtsEngine() {
         try {
-            tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            // Use Activity context and user's configured default engine (Google TTS)
+            tts = new TextToSpeech(MainActivity.this, new TextToSpeech.OnInitListener() {
                 @Override
                 public void onInit(int status) {
                     if (status == TextToSpeech.SUCCESS) {
                         configureVietnameseLocale();
                     } else {
-                        initDefaultTtsEngine();
+                        initGoogleExplicitEngine();
                     }
                 }
-            }, "com.google.android.tts");
+            });
         } catch (Exception e) {
-            initDefaultTtsEngine();
+            initGoogleExplicitEngine();
         }
     }
 
-    private void initDefaultTtsEngine() {
+    private void initGoogleExplicitEngine() {
         try {
             tts = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
                 @Override
@@ -109,17 +120,17 @@ public class MainActivity extends BridgeActivity {
                         configureVietnameseLocale();
                     }
                 }
-            });
+            }, "com.google.android.tts");
         } catch (Exception ignored) {}
     }
 
     private void configureVietnameseLocale() {
         if (tts == null) return;
         try {
-            Locale viLocale = new Locale("vi", "VN");
+            Locale viLocale = Locale.forLanguageTag("vi-VN");
             int res = tts.setLanguage(viLocale);
             if (res == TextToSpeech.LANG_MISSING_DATA || res == TextToSpeech.LANG_NOT_SUPPORTED) {
-                tts.setLanguage(new Locale("vi"));
+                tts.setLanguage(new Locale("vi", "VN"));
             }
             ttsReady = true;
             if (pendingText != null) {
@@ -134,7 +145,7 @@ public class MainActivity extends BridgeActivity {
     private void speakInternal(String text, float rate) {
         if (tts == null || text == null) return;
         try {
-            tts.setLanguage(new Locale("vi", "VN"));
+            tts.setLanguage(Locale.forLanguageTag("vi-VN"));
             tts.setSpeechRate(rate > 0 ? rate : 0.92f);
             Bundle params = new Bundle();
             params.putFloat(TextToSpeech.Engine.KEY_PARAM_VOLUME, 1.0f);
@@ -157,7 +168,7 @@ public class MainActivity extends BridgeActivity {
                     if (tts == null || !ttsReady) {
                         pendingText = text;
                         pendingRate = rate;
-                        initGoogleTtsEngine();
+                        initSystemTtsEngine();
                         return;
                     }
                     speakInternal(text, rate);
@@ -191,7 +202,7 @@ public class MainActivity extends BridgeActivity {
 }
 `;
     fs.writeFileSync(mainActivityPath, javaCode, 'utf8');
-    console.log('Successfully injected Native Android TTS Bridge into MainActivity.java');
+    console.log('Successfully injected Native Android TTS Bridge + webView.reload() into MainActivity.java');
   }
 } catch (err) {
   console.warn('Warning in patch_android_native.js (continuing build):', err && err.message ? err.message : err);

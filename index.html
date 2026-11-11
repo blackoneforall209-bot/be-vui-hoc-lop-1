@@ -91,7 +91,7 @@
             <span class="text-base sm:text-xl font-black tracking-tight text-amber-600">BÉ VUI HỌC LỚP 1</span>
             <span class="hidden sm:inline-block text-xs font-extrabold px-2 py-0.5 bg-emerald-100 text-emerald-700 rounded-full">HK1</span>
           </div>
-          <p class="text-xs text-slate-500 font-semibold">Toán & Tiếng Việt • 12 Đề gốc</p>
+          <p class="text-xs text-slate-500 font-semibold">Toán & Tiếng Việt • v2.0 Native Audio</p>
         </div>
       </button>
 
@@ -2541,6 +2541,15 @@
 
     function stopAllSpeech() {
       try {
+        if (window.AndroidNativeTTS && typeof window.AndroidNativeTTS.stop === "function") {
+          window.AndroidNativeTTS.stop();
+        }
+      } catch (e) {}
+      try {
+        const capTts = getCapacitorNativeTTS();
+        if (capTts) capTts.stop().catch(() => {});
+      } catch (e) {}
+      try {
         if ("speechSynthesis" in window) {
           window.speechSynthesis.cancel();
         }
@@ -2593,7 +2602,7 @@
 
     let ttsResumeTimer = null;
 
-    // Check if Native Android Capacitor TextToSpeech plugin is loaded
+    // Check if Native Android Java Bridge or Capacitor TextToSpeech plugin is loaded
     function getCapacitorNativeTTS() {
       if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.TextToSpeech) {
         return window.Capacitor.Plugins.TextToSpeech;
@@ -2601,81 +2610,66 @@
       return null;
     }
 
-    async function speakViaNativeCapacitor(cleanText) {
-      const nativeTts = getCapacitorNativeTTS();
-      if (!nativeTts) return false;
-      try {
-        await nativeTts.stop();
-        await nativeTts.speak({
-          text: cleanText,
-          lang: "vi-VN",
-          rate: appState.voiceSpeed || 0.95,
-          pitch: 1.0,
-          volume: 1.0,
-          category: "ambient"
-        });
-        return true;
-      } catch (err) {
-        console.warn("Native TTS error, falling back to Webview:", err);
-        return false;
+    async function speakViaNativeAndroidBridge(cleanText) {
+      const rateVal = Number(appState.voiceSpeed || 0.92);
+
+      // 1. Direct Java @JavascriptInterface Bridge in MainActivity.java
+      if (window.AndroidNativeTTS && typeof window.AndroidNativeTTS.speak === "function") {
+        try {
+          window.AndroidNativeTTS.speak(String(cleanText), rateVal);
+          return true;
+        } catch (e) {
+          console.warn("AndroidNativeTTS bridge error:", e);
+        }
       }
+
+      // 2. Capacitor Community TextToSpeech Plugin
+      const capTts = getCapacitorNativeTTS();
+      if (capTts) {
+        try {
+          await capTts.stop().catch(() => {});
+          await capTts.speak({
+            text: String(cleanText),
+            lang: "vi-VN",
+            rate: rateVal,
+            pitch: 1.0,
+            volume: 1.0,
+            category: "ambient"
+          });
+          return true;
+        } catch (err) {
+          console.warn("Capacitor TTS error:", err);
+        }
+      }
+
+      return false;
     }
 
-    function speakViaLocalSynthesis(cleanText) {
-      // 1. Try Native Android TTS first (100% works on Samsung Tab S8 & S23 Ultra without WebView limitations!)
-      const nativeTts = getCapacitorNativeTTS();
-      if (nativeTts) {
-        speakViaNativeCapacitor(cleanText);
-        return;
-      }
+    async function speakViaLocalSynthesis(cleanText) {
+      // 1. First try Native Android OS TTS (Java Bridge or Capacitor Plugin)
+      const spokeNative = await speakViaNativeAndroidBridge(cleanText);
+      if (spokeNative) return;
 
-      // 2. Web Speech API fallback for Chrome Browser / Web
-      if (!("speechSynthesis" in window)) {
-        playSoundClick();
-        return;
-      }
-
-      try {
-        if (window.speechSynthesis.paused) {
-          window.speechSynthesis.resume();
-        }
-        window.speechSynthesis.cancel();
-      } catch (e) {}
-
-      if (ttsResumeTimer) {
-        clearInterval(ttsResumeTimer);
-        ttsResumeTimer = null;
-      }
-
+      // 2. Next check if browser Web Speech API actually has Vietnamese voices
       const bestVoice = pickBestVietnameseVoice();
-      const utter = new SpeechSynthesisUtterance(cleanText);
-      utter.lang = "vi-VN";
-      if (bestVoice) {
+      if ("speechSynthesis" in window && bestVoice) {
+        try {
+          if (window.speechSynthesis.paused) window.speechSynthesis.resume();
+          window.speechSynthesis.cancel();
+        } catch (e) {}
+
+        const utter = new SpeechSynthesisUtterance(cleanText);
+        utter.lang = bestVoice.lang || "vi-VN";
         utter.voice = bestVoice;
-      }
-      utter.rate = appState.voiceSpeed || 0.92;
-      utter.pitch = 1.0;
-
-      utter.onstart = () => {
+        utter.rate = appState.voiceSpeed || 0.92;
+        utter.pitch = 1.0;
+        window.speechSynthesis.speak(utter);
         try { window.speechSynthesis.resume(); } catch (e) {}
-      };
+        return;
+      }
 
-      utter.onerror = (e) => {
-        console.warn("TTS Error:", e);
-        try { window.speechSynthesis.resume(); } catch (err) {}
-      };
-
-      window.speechSynthesis.speak(utter);
-      try { window.speechSynthesis.resume(); } catch (e) {}
-
-      ttsResumeTimer = setInterval(() => {
-        if (!window.speechSynthesis.speaking) {
-          clearInterval(ttsResumeTimer);
-          ttsResumeTimer = null;
-        } else if (window.speechSynthesis.paused) {
-          window.speechSynthesis.resume();
-        }
-      }, 350);
+      // 3. Fallback to unlocked no-referrer Cloud Audio Stream
+      speakViaCloudStream(cleanText, false);
     }
 
     let activeAudioInstance = null;
@@ -2692,7 +2686,7 @@
         }
         const nextText = activeCloudAudioQueue.shift();
         const encoded = encodeURIComponent(nextText);
-        // Primary URL + Fallback URL for Android WebView
+        // Unlocked via <meta name="referrer" content="no-referrer" />
         const streamUrls = [
           "https://translate.googleapis.com/translate_tts?ie=UTF-8&tl=vi&client=tw-ob&q=" + encoded,
           "https://translate.google.com/translate_tts?ie=UTF-8&tl=vi&client=gtx&q=" + encoded
@@ -2723,7 +2717,7 @@
               isCloudPlaying = false;
               activeCloudAudioQueue = [];
               if (fallbackToLocal) {
-                speakViaLocalSynthesis(cleanText);
+                speakViaNativeAndroidBridge(cleanText);
               }
             }
           };
@@ -2731,7 +2725,7 @@
           snd.src = streamUrls[urlIdx];
           const p = snd.play();
           if (p !== undefined) {
-            p.catch((err) => {
+            p.catch(() => {
               urlIdx++;
               if (urlIdx < streamUrls.length) {
                 tryPlayUrl();
@@ -2739,7 +2733,7 @@
                 isCloudPlaying = false;
                 activeCloudAudioQueue = [];
                 if (fallbackToLocal) {
-                  speakViaLocalSynthesis(cleanText);
+                  speakViaNativeAndroidBridge(cleanText);
                 }
               }
             });
@@ -2768,9 +2762,12 @@
       } else if (mode === "local") {
         speakViaLocalSynthesis(clean);
       } else {
-        // Auto mode on Android: Since user configured Google Speech Engine, ALWAYS speak locally first!
-        // Local synthesis via SpeechSynthesisUtterance('vi-VN') is 100% offline, native and instant!
-        speakViaLocalSynthesis(clean);
+        // Auto mode: If Native Android TTS is connected, speak via Native Android TTS; otherwise use unlocked Cloud Stream with Native fallback
+        if (hasAndroidNativeTtsBridge()) {
+          speakViaLocalSynthesis(clean);
+        } else {
+          speakViaCloudStream(clean, true);
+        }
       }
     }
 
@@ -2786,12 +2783,24 @@
       saveState();
     }
 
+    function hasAndroidNativeTtsBridge() {
+      return Boolean(
+        window.AndroidNativeTTS ||
+        window.__HAS_NATIVE_ANDROID_TTS__ ||
+        (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.TextToSpeech)
+      );
+    }
+
     function populateVoiceSelectDropdown() {
       const sel = document.getElementById("selectLocalVoice");
       if (!sel) return;
       const viVoices = getVietnameseVoices();
+      if (hasAndroidNativeTtsBridge()) {
+        sel.innerHTML = `<option value="android_native_vi" selected>🇻🇳 Giọng Tiếng Việt Hệ Thống Android (Google TTS Native)</option>`;
+        return;
+      }
       if (!viVoices.length) {
-        sel.innerHTML = `<option value="">(Thiết bị chưa cài giọng Tiếng Việt offline - Hệ thống tự dùng Giọng Cô Giáo Online)</option>`;
+        sel.innerHTML = `<option value="cloud_vi" selected>🌐 Giọng Cô Giáo Tiếng Việt Chuẩn (Google Audio Stream)</option>`;
         return;
       }
       sel.innerHTML = viVoices.map(v => {
