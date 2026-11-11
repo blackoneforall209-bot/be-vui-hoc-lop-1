@@ -1067,6 +1067,21 @@
         <button id="btnCloseVoiceModalTop" onclick="closeVoiceModal()" class="w-9 h-9 rounded-xl bg-slate-100 text-slate-600 font-black text-base btn-3d">✕</button>
       </div>
 
+      <!-- Samsung & Android Text-to-Speech Quick Guide Banner -->
+      <div class="bg-amber-50 border-2 border-amber-300 rounded-2xl p-3.5 space-y-2 text-xs">
+        <div class="flex items-center gap-2 text-amber-950 font-black text-xs sm:text-sm">
+          <span>💡</span><span>Máy Samsung (Tab S8 / S23 Ultra) chưa có tiếng?</span>
+        </div>
+        <p class="font-semibold text-slate-700 leading-relaxed">
+          Mặc định máy Samsung dùng công cụ <i>"Samsung Text-to-Speech"</i> (không có tiếng Việt). Bạn chỉ cần cài thêm giọng Tiếng Việt miễn phí của Google theo 3 bước:
+        </p>
+        <div class="bg-white p-2.5 rounded-xl border border-amber-200 space-y-1 font-bold text-slate-800">
+          <div>1️⃣ Vào <b>Cài đặt máy (Settings)</b> ➔ <b>Quản lý chung (General management)</b> ➔ <b>Chuyển văn bản thành giọng nói (Text-to-speech)</b>.</div>
+          <div>2️⃣ Ở mục <b>Công cụ ưa thích (Preferred engine)</b>: Chuyển từ <i>Samsung</i> sang <b>Dịch vụ giọng nói của Google (Speech Services by Google)</b>.</div>
+          <div>3️⃣ Bấm biểu tượng ⚙️ (Cài đặt) bên cạnh ➔ Chọn <b>Cài đặt dữ liệu giọng nói</b> ➔ Tải gói <b>Tiếng Việt (Vietnam)</b>.</div>
+        </div>
+      </div>
+
       <!-- 1. Chế độ nguồn giọng -->
       <div class="space-y-1.5">
         <label class="block text-xs font-black uppercase text-slate-500">1. Chọn nguồn giọng đọc:</label>
@@ -2024,271 +2039,7 @@
           { id: "v12_q7", type: "mcq", skill: "reading", hasPassage: true, prompt: "Câu 6 (Trang 22): Cô rùa cho gà con ăn gì?", options: ["A. ăn giun", "B. ăn thóc", "C. ăn cơm"], answer: 1, explanation: "Cuối bài viết: 'Cô còn cho gà con ăn thóc rất ngon.'" }
         ]
       }
-      ,
-      // --- BỘ ĐỀ CHÍNH TẢ & HỌC VẦN TỪ FILE 33 TRANG (TUẦN 21 - 25 & CÔ BÍCH) ---
-      {
-        id: "viet_chinhta_tuan25",
-        subject: "viet",
-        badge: "Tiếng Việt • Tuần 25",
-        title: "Phiếu Bài Tập Chính Tả Tuần 25",
-        subtitle: "Gà hoa mơ và vịt xám, điền vần ôi/ơi, oan/oat, nhận diện từ dưới tranh (Trang 1 PDF)",
-        icon: "🦆",
-        color: "emerald",
-        passageTitle: "Đoạn văn: Gà hoa mơ và vịt xám",
-        passageText: "Gà hoa mơ là bạn của vịt xám. Một hôm, hai bạn rủ nhau đi kiếm ăn. Đi qua hồ nước, chẳng may gà hoa mơ trượt chân ngã. Vịt xám liền lao xuống cứu bạn. Gà hoa mơ cảm ơn vịt xám.",
-        questions: [
-          {
-            id: "ct25_q1", type: "fill_group", skill: "spelling", hasPassage: true,
-            prompt: "Bài mở đầu: Chọn từ viết đúng chính tả trong ngoặc để hoàn thành câu chuyện Gà hoa mơ và Vịt xám:",
-            keypad: ["xám", "sám", "nhau", "nhao", "trượt", "chượt", "lao", "nao"],
-            items: [
-              { prefix: "Gà hoa mơ là bạn của vịt (sám / xám):", answer: "xám", suffix: "" },
-              { prefix: "Một hôm, hai bạn rủ (nhao / nhau):", answer: "nhau", suffix: "đi kiếm ăn." },
-              { prefix: "Chẳng may gà hoa mơ (trượt / chượt):", answer: "trượt", suffix: "chân ngã." },
-              { prefix: "Vịt xám liền (lao / nao):", answer: "lao", suffix: "xuống cứu bạn." }
-            ],
-            explanation: "Các từ đúng chính tả là: vịt xám, rủ nhau, trượt chân, lao xuống."
-          },
-          {
-            id: "ct25_q2", type: "fill_group", skill: "spelling",
-            prompt: "Câu 1: Điền vần 'ôi' hoặc vần 'ơi' (có dấu thanh phù hợp) vào chỗ chấm:",
-            keypad: ["ơi", "ôi", "ối", "ổi", "ồi"],
-            items: [
-              { prefix: "🧣 ph", answer: "ơi", suffix: " khăn" },
-              { prefix: "🍓 quả mâm x", answer: "ôi", suffix: "" },
-              { prefix: "💇‍♀️ tóc r", answer: "ối", suffix: "" },
-              { prefix: "🏊 bể b", answer: "ơi", suffix: "" },
-              { prefix: "🚩 phất ph", answer: "ới", suffix: "" },
-              { prefix: "🍐 quả ", answer: "ổi", suffix: "" },
-              { prefix: "🧢 mũ n", answer: "ồi", suffix: "" },
-              { prefix: "🎺 th", answer: "ổi", suffix: " kèn" },
-              { prefix: "📍 đến n", answer: "ơi", suffix: "" }
-            ],
-            explanation: "phơi khăn, quả mâm xôi, tóc rối, bể bơi, phất phới, quả ổi, mũ nồi, thổi kèn, đến nơi."
-          },
-          {
-            id: "ct25_q3", type: "fill_group", skill: "spelling",
-            prompt: "Câu 2: Điền vần 'oan' hoặc vần 'oat' (có dấu thanh phù hợp) vào chỗ chấm:",
-            keypad: ["oàn", "oát", "oán", "oạt"],
-            items: [
-              { prefix: "Anh em đ", answer: "oàn", suffix: " kết một lòng." },
-              { prefix: "Bé chơi đá bóng t", answer: "oát", suffix: " cả mồ hôi." },
-              { prefix: "Có một đ", answer: "oàn", suffix: " tàu đang chạy." },
-              { prefix: "Cô giáo đang dạy học môn t", answer: "oán", suffix: "." },
-              { prefix: "Buổi sinh h", answer: "oạt", suffix: " cuối tuần diễn ra rất vui." },
-              { prefix: "Gạch nhà bạn Mai bị đổ hàng l", answer: "oạt", suffix: "." }
-            ],
-            explanation: "đoàn kết, toát mồ hôi, đoàn tàu, môn toán, sinh hoạt, hàng loạt."
-          },
-          {
-            id: "ct25_q4", type: "fill_group", skill: "spelling",
-            prompt: "Câu 5: Viết từ ngữ thích hợp dưới mỗi bức tranh (Quả táo, Con trâu, Củ nghệ):",
-            keypad: ["quả táo", "con trâu", "củ nghệ"],
-            items: [
-              { prefix: "🍎 Tranh 1:", answer: "quả táo", suffix: "" },
-              { prefix: "🐃 Tranh 2:", answer: "con trâu", suffix: "" },
-              { prefix: "🫚 Tranh 3:", answer: "củ nghệ", suffix: "" }
-            ],
-            explanation: "Tranh 1 là quả táo, tranh 2 là con trâu, tranh 3 là củ nghệ."
-          }
-        ]
-      },
-      {
-        id: "viet_chinhta_tuan24",
-        subject: "viet",
-        badge: "Tiếng Việt • Tuần 24",
-        title: "Phiếu Bài Tập Chính Tả Tuần 24",
-        subtitle: "Sắp xếp câu, điền vần oan/oăn, chọn từ điền vào chỗ chấm (Trang 2 PDF)",
-        icon: "🦢",
-        color: "teal",
-        questions: [
-          {
-            id: "ct24_q1", type: "ordering", skill: "spelling",
-            prompt: "Câu 1a: Sắp xếp các từ sau thành câu hoàn chỉnh: kế / học / và / Liên / nhóm / hoạch / Lan / lên",
-            tokens: ["nhóm", "lên", "kế hoạch", "Liên và Lan", "học"],
-            answer: ["Liên và Lan", "lên", "kế hoạch", "học", "nhóm"],
-            explanation: "Câu hoàn chỉnh: Liên và Lan lên kế hoạch học nhóm."
-          },
-          {
-            id: "ct24_q2", type: "ordering", skill: "spelling",
-            prompt: "Câu 1b: Sắp xếp các từ sau thành câu hoàn chỉnh: tổ / cô giáo / cho / các bạn / chức / nhật / tháng 4 / sinh",
-            tokens: ["sinh nhật", "Cô giáo", "các bạn", "tổ chức", "cho", "tháng 4"],
-            answer: ["Cô giáo", "tổ chức", "sinh nhật", "cho", "các bạn", "tháng 4"],
-            explanation: "Câu hoàn chỉnh: Cô giáo tổ chức sinh nhật cho các bạn tháng 4."
-          },
-          {
-            id: "ct24_q3", type: "ordering", skill: "spelling",
-            prompt: "Câu 1c: Sắp xếp các từ sau thành câu hoàn chỉnh: mẹ / Châu / đưa / trường / được / đến / học",
-            tokens: ["được mẹ", "đến trường", "Châu", "đưa", "học"],
-            answer: ["Châu", "được mẹ", "đưa", "đến trường", "học"],
-            explanation: "Câu hoàn chỉnh: Châu được mẹ đưa đến trường học."
-          },
-          {
-            id: "ct24_q4", type: "fill_group", skill: "spelling",
-            prompt: "Câu 2: Điền vần 'oan' hoặc 'oăn' (kèm dấu thanh phù hợp):",
-            keypad: ["oàn", "oan", "oăn", "oắn", "oán"],
-            items: [
-              { prefix: "🚂 đ", answer: "oàn", suffix: " tàu" },
-              { prefix: "🛠️ máy kh", answer: "oan", suffix: "" },
-              { prefix: "🪢 dây x", answer: "oắn", suffix: "" },
-              { prefix: "📘 sách t", answer: "oán", suffix: "" },
-              { prefix: "👩‍🦱 tóc x", answer: "oăn", suffix: " tít" },
-              { prefix: "🐚 ốc x", answer: "oắn", suffix: "" },
-              { prefix: "🌸 phiếu bé ng", answer: "oan", suffix: "" }
-            ],
-            explanation: "đoàn tàu, máy khoan, dây xoắn, sách toán, tóc xoăn tít, ốc xoắn, phiếu bé ngoan."
-          },
-          {
-            id: "ct24_q5", type: "fill_group", skill: "spelling",
-            prompt: "Câu 3: Chọn các từ trong ngoặc ( thoại, tuyết, nghĩnh, dâu tây, én, hoạch ) điền vào chỗ chấm:",
-            keypad: ["hoạch", "tuyết", "nghĩnh", "én", "thoại", "dâu tây"],
-            items: [
-              { prefix: "🌾 Thu ", answer: "hoạch", suffix: "" },
-              { prefix: "⛄ người ", answer: "tuyết", suffix: "" },
-              { prefix: "👶 ngộ ", answer: "nghĩnh", suffix: "" },
-              { prefix: "🐦 Chim ", answer: "én", suffix: "" },
-              { prefix: "☎️ điện ", answer: "thoại", suffix: "" },
-              { prefix: "🍓 quả ", answer: "dâu tây", suffix: "" }
-            ],
-            explanation: "Thu hoạch, người tuyết, ngộ nghĩnh, Chim én, điện thoại, quả dâu tây."
-          }
-        ]
-      },
-      {
-        id: "viet_chinhta_tuan23",
-        subject: "viet",
-        badge: "Tiếng Việt • Tuần 23",
-        title: "Phiếu Bài Tập Chính Tả Tuần 23",
-        subtitle: "Điền vẹt/chó, vần uy/uya, chọn từ lúa/ngồi/nhớ/nhặt, sửa lỗi chính tả (Trang 3 PDF)",
-        icon: "🦜",
-        color: "sky",
-        questions: [
-          {
-            id: "ct23_q1", type: "fill_group", skill: "spelling",
-            prompt: "Câu 1: Điền 'vẹt' hoặc 'chó' vào chỗ chấm cho phù hợp:",
-            keypad: ["Con vẹt", "Con chó"],
-            items: [
-              { prefix: "a. ", answer: "Con vẹt", suffix: " có cái mỏ khoằm." },
-              { prefix: "b. ", answer: "Con chó", suffix: " có râu xồm xoàm." }
-            ],
-            explanation: "Con vẹt có cái mỏ khoằm. Con chó có râu xồm xoàm."
-          },
-          {
-            id: "ct23_q2", type: "ordering", skill: "spelling",
-            prompt: "Câu 2a: Sắp xếp các từ sau thành câu hoàn chỉnh: cao / Hươu / là / nhất / thế / con / vật / giới",
-            tokens: ["con vật", "Hươu", "cao nhất", "thế giới", "là"],
-            answer: ["Hươu", "là", "con vật", "cao nhất", "thế giới"],
-            explanation: "Hươu là con vật cao nhất thế giới."
-          },
-          {
-            id: "ct23_q3", type: "fill_group", skill: "spelling",
-            prompt: "Câu 3: Điền vần 'uy' hoặc 'uya' (kèm dấu thanh phù hợp):",
-            keypad: ["uy", "uya", "uý", "uỵ"],
-            items: [
-              { prefix: "👕 kh", answer: "uy", suffix: " áo" },
-              { prefix: "🎖️ h", answer: "uy", suffix: " hiệu" },
-              { prefix: "🎋 l", answer: "uỹ", suffix: " tre" },
-              { prefix: "🧥 phéc mơ t", answer: "uya", suffix: "" },
-              { prefix: "🌙 đêm kh", answer: "uya", suffix: "" },
-              { prefix: "⚠️ ng", answer: "uy", suffix: " hiểm" },
-              { prefix: "🦉 thức kh", answer: "uya", suffix: "" },
-              { prefix: "⚓ th", answer: "uỷ", suffix: " thủ" }
-            ],
-            explanation: "khuy áo, huy hiệu, luỹ tre, phéc mơ tuya, đêm khuya, nguy hiểm, thức khuya, thuỷ thủ."
-          },
-          {
-            id: "ct23_q4", type: "fill_group", skill: "reading",
-            prompt: "Câu 5: Chọn từ trong ngoặc ( lúa, ngồi, nhớ, nhặt ) điền vào chỗ chấm:",
-            keypad: ["ngồi", "nhặt", "lúa", "nhớ"],
-            items: [
-              { prefix: "a. Các bạn học sinh ", answer: "ngồi", suffix: " im lặng đọc bài." },
-              { prefix: "b. Sáng sớm, các cô cậu học trò lại ùa ra ", answer: "nhặt", suffix: " rác trên sân trường." },
-              { prefix: "c. Bố mẹ đang gặt ", answer: "lúa", suffix: " trên đồng ruộng." },
-              { prefix: "d. Ông bà về quê mất, bé Bi rất ", answer: "nhớ", suffix: " ông bà." }
-            ],
-            explanation: "ngồi im lặng, nhặt rác, gặt lúa, nhớ ông bà."
-          },
-          {
-            id: "ct23_q5", type: "fill_group", skill: "spelling",
-            prompt: "Câu 6: Sửa lại các từ viết sai chính tả sau cho đúng:",
-            keypad: ["bánh gai", "cặp sách", "tủ lệch", "máy tính", "kéo co", "bầu trời"],
-            items: [
-              { prefix: "bánh gay ➔", answer: "bánh gai", suffix: "" },
-              { prefix: "cặp xách ➔", answer: "cặp sách", suffix: "" },
-              { prefix: "tủ nệch ➔", answer: "tủ lệch", suffix: "" },
-              { prefix: "mái tính ➔", answer: "máy tính", suffix: "" },
-              { prefix: "céo co ➔", answer: "kéo co", suffix: "" },
-              { prefix: "bầu chời ➔", answer: "bầu trời", suffix: "" }
-            ],
-            explanation: "Các từ đúng là: bánh gai, cặp sách, tủ lệch, máy tính, kéo co, bầu trời."
-          }
-        ]
-      },
-      {
-        id: "viet_chinhta_tuan21_22",
-        subject: "viet",
-        badge: "Tiếng Việt • Tuần 21 & 22",
-        title: "Phiếu Bài Tập Chính Tả Tuần 21 & 22",
-        subtitle: "Điền oa/oe, ơm/ơp, chọn từ đúng chính tả Vườn hoa nhà Thu & Sinh nhật mẹ (Trang 4 & 5 PDF)",
-        icon: "🌺",
-        color: "rose",
-        questions: [
-          {
-            id: "ct22_q1", type: "fill_group", skill: "spelling",
-            prompt: "Tuần 22 - Câu 2: Điền vần 'oa' hoặc 'oe' (kèm dấu thanh phù hợp):",
-            keypad: ["oé", "oè", "oa", "oà", "oá", "oe"],
-            items: [
-              { prefix: "💦 nước tung t", answer: "oé", suffix: "" },
-              { prefix: "🐦 chích ch", answer: "oè", suffix: "" },
-              { prefix: "📢 cái l", answer: "oa", suffix: "" },
-              { prefix: "📝 nh", answer: "oè", suffix: " chữ" },
-              { prefix: "🔒 ổ kh", answer: "oá", suffix: "" },
-              { prefix: "🎨 h", answer: "oạ", suffix: " sĩ" },
-              { prefix: "⭕ tròn x", answer: "oe", suffix: "" }
-            ],
-            explanation: "nước tung toé, chích choè, cái loa, nhoè chữ, ổ khoá, hoạ sĩ, tròn xoe."
-          },
-          {
-            id: "ct22_q2", type: "fill_group", skill: "spelling",
-            prompt: "Tuần 22 - Câu 3: Chọn từ đúng chính tả trong ngoặc cho đoạn văn Vườn nhà Thu:",
-            keypad: ["trồng", "chồng", "sắc", "xắc", "giấy", "dấy", "trắng", "chắng", "dạ", "giạ"],
-            items: [
-              { prefix: "Vườn nhà Thu (chồng / trồng):", answer: "trồng", suffix: "rất nhiều hoa." },
-              { prefix: "Hoa cúc thúy đủ màu (sắc / xắc):", answer: "sắc", suffix: "." },
-              { prefix: "Hoa (giấy / dấy):", answer: "giấy", suffix: "cánh mỏng như tờ pơ luya." },
-              { prefix: "Hoa thủy tiên cánh (trắng / chẳng):", answer: "trắng", suffix: "nhụy vàng." },
-              { prefix: "Hoa (giạ / dạ):", answer: "dạ", suffix: "hương càng về khuya càng thơm." }
-            ],
-            explanation: "Các từ đúng là: trồng, màu sắc, hoa giấy, cánh trắng, hoa dạ hương."
-          },
-          {
-            id: "ct22_q3", type: "matching", skill: "reading",
-            prompt: "Tuần 22 - Câu 5: Nối ô chữ ở cột A với ô chữ ở cột B cho phù hợp:",
-            pairs: [
-              { left: "🏫 Em đang học", right: "ở trường Phan Bội Châu." },
-              { left: "🌳 Sân trường em", right: "rất rộng và nhiều cây." },
-              { left: "👩‍🏫 Cô giáo em", right: "giảng bài rất hay." },
-              { left: "👧 Các bạn nữ", right: "rất thích nhảy dây." }
-            ],
-            explanation: "Em đang học ở trường Phan Bội Châu. Sân trường em rất rộng và nhiều cây. Cô giáo em giảng bài rất hay. Các bạn nữ rất thích nhảy dây."
-          },
-          {
-            id: "ct21_q4", type: "fill_group", skill: "spelling",
-            prompt: "Tuần 21 - Câu 2 & Câu 4: Điền vần ơm/ơp và chọn từ đúng cho đoạn văn Sinh nhật mẹ:",
-            keypad: ["ơp", "ơm", "ớp", "chúc", "rán", "lắm", "phúc", "gian"],
-            items: [
-              { prefix: "🐟 cá b", answer: "ớp", suffix: "" },
-              { prefix: "🌾 r", answer: "ơm", suffix: " rạ" },
-              { prefix: "🍚 c", answer: "ơm", suffix: " nếp" },
-              { prefix: "Làm bữa tối (chúc / trúc):", answer: "chúc", suffix: "mừng sinh nhật mẹ." },
-              { prefix: "Có tôm hùm, cá kho và cả nem (ráng / rán):", answer: "rán", suffix: "." },
-              { prefix: "Mẹ vui (nắm / lắm):", answer: "lắm", suffix: "." },
-              { prefix: "Người phụ nữ hạnh (phúc / phức):", answer: "phúc", suffix: "nhất trần gian." }
-            ],
-            explanation: "cá bớp, rơm rạ, cơm nếp; chúc mừng, nem rán, vui lắm, hạnh phúc."
-          }
-        ]
-      },
+
     ];
 
     const SKILL_CATEGORIES = [
@@ -2671,16 +2422,39 @@
       if (window.speechSynthesis.onvoiceschanged !== undefined) {
         window.speechSynthesis.onvoiceschanged = refreshAvailableVoices;
       }
+      // Periodically refresh voice cache during the first 10 seconds of app launch (vital for Android WebView!)
+      let voiceChecks = 0;
+      const voiceInterval = setInterval(() => {
+        voiceChecks++;
+        refreshAvailableVoices();
+        if (getVietnameseVoices().length > 0 || voiceChecks > 8) {
+          clearInterval(voiceInterval);
+        }
+      }, 1200);
     }
 
     function getVietnameseVoices() {
-      if (!availableVoices.length && "speechSynthesis" in window) {
-        availableVoices = window.speechSynthesis.getVoices() || [];
+      if ("speechSynthesis" in window) {
+        const currentVoices = window.speechSynthesis.getVoices();
+        if (currentVoices && currentVoices.length > 0) {
+          availableVoices = currentVoices;
+        }
       }
-      return availableVoices.filter(v => {
-        const lang = (v.lang || "").toLowerCase();
+      return (availableVoices || []).filter(v => {
+        const lang = (v.lang || "").toLowerCase().replace(/_/g, "-");
         const name = (v.name || "").toLowerCase();
-        return lang.includes("vi") || name.includes("viet") || name.includes("tiếng việt") || name.includes("hoaimy") || name.includes("namminh") || name.includes("linh") || name.includes("an");
+        return (
+          lang === "vi" ||
+          lang.startsWith("vi-") ||
+          lang.includes("vie") ||
+          name.includes("vietnam") ||
+          name.includes("tiếng việt") ||
+          name.includes("vietnamese") ||
+          name.includes("hoaimy") ||
+          name.includes("namminh") ||
+          name.includes("linh") ||
+          name.includes("an")
+        );
       });
     }
 
@@ -2767,6 +2541,15 @@
 
     function stopAllSpeech() {
       try {
+        if (window.AndroidNativeTTS && typeof window.AndroidNativeTTS.stop === "function") {
+          window.AndroidNativeTTS.stop();
+        }
+      } catch (e) {}
+      try {
+        const capTts = getCapacitorNativeTTS();
+        if (capTts) capTts.stop().catch(() => {});
+      } catch (e) {}
+      try {
         if ("speechSynthesis" in window) {
           window.speechSynthesis.cancel();
         }
@@ -2774,6 +2557,11 @@
       try {
         activeCloudAudioQueue = [];
         isCloudPlaying = false;
+        if (activeAudioInstance) {
+          activeAudioInstance.pause();
+          activeAudioInstance.src = "";
+          activeAudioInstance = null;
+        }
         const audioEl = document.getElementById("cloudTtsAudio");
         if (audioEl) {
           audioEl.pause();
@@ -2812,34 +2600,82 @@
       return chunks.length ? chunks : [text];
     }
 
-    function speakViaLocalSynthesis(cleanText) {
-      if (!("speechSynthesis" in window)) {
-        playSoundClick();
-        return;
-      }
-      window.speechSynthesis.cancel();
-      const bestVoice = pickBestVietnameseVoice();
-      const chunks = splitTextIntoChunks(cleanText, 180);
+    let ttsResumeTimer = null;
 
-      chunks.forEach(chunk => {
-        const utter = new SpeechSynthesisUtterance(chunk);
-        utter.lang = bestVoice ? bestVoice.lang : "vi-VN";
-        if (bestVoice) {
-          utter.voice = bestVoice;
+    // Check if Native Android Java Bridge or Capacitor TextToSpeech plugin is loaded
+    function getCapacitorNativeTTS() {
+      if (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.TextToSpeech) {
+        return window.Capacitor.Plugins.TextToSpeech;
+      }
+      return null;
+    }
+
+    async function speakViaNativeAndroidBridge(cleanText) {
+      const rateVal = Number(appState.voiceSpeed || 0.92);
+
+      // 1. Direct Java @JavascriptInterface Bridge in MainActivity.java
+      if (window.AndroidNativeTTS && typeof window.AndroidNativeTTS.speak === "function") {
+        try {
+          window.AndroidNativeTTS.speak(String(cleanText), rateVal);
+          return true;
+        } catch (e) {
+          console.warn("AndroidNativeTTS bridge error:", e);
         }
+      }
+
+      // 2. Capacitor Community TextToSpeech Plugin
+      const capTts = getCapacitorNativeTTS();
+      if (capTts) {
+        try {
+          await capTts.stop().catch(() => {});
+          await capTts.speak({
+            text: String(cleanText),
+            lang: "vi-VN",
+            rate: rateVal,
+            pitch: 1.0,
+            volume: 1.0,
+            category: "ambient"
+          });
+          return true;
+        } catch (err) {
+          console.warn("Capacitor TTS error:", err);
+        }
+      }
+
+      return false;
+    }
+
+    async function speakViaLocalSynthesis(cleanText) {
+      // 1. First try Native Android OS TTS (Java Bridge or Capacitor Plugin)
+      const spokeNative = await speakViaNativeAndroidBridge(cleanText);
+      if (spokeNative) return;
+
+      // 2. Next check if browser Web Speech API actually has Vietnamese voices
+      const bestVoice = pickBestVietnameseVoice();
+      if ("speechSynthesis" in window && bestVoice) {
+        try {
+          if (window.speechSynthesis.paused) window.speechSynthesis.resume();
+          window.speechSynthesis.cancel();
+        } catch (e) {}
+
+        const utter = new SpeechSynthesisUtterance(cleanText);
+        utter.lang = bestVoice.lang || "vi-VN";
+        utter.voice = bestVoice;
         utter.rate = appState.voiceSpeed || 0.92;
         utter.pitch = 1.0;
         window.speechSynthesis.speak(utter);
-      });
-    }
-
-    function speakViaCloudStream(cleanText, fallbackToLocal = true) {
-      const audioEl = document.getElementById("cloudTtsAudio");
-      if (!audioEl) {
-        speakViaLocalSynthesis(cleanText);
+        try { window.speechSynthesis.resume(); } catch (e) {}
         return;
       }
-      const chunks = splitTextIntoChunks(cleanText, 150);
+
+      // 3. Fallback to unlocked no-referrer Cloud Audio Stream
+      speakViaCloudStream(cleanText, false);
+    }
+
+    let activeAudioInstance = null;
+
+    function speakViaCloudStream(cleanText, fallbackToLocal = true) {
+      const chunks = splitTextIntoChunks(cleanText, 140);
       activeCloudAudioQueue = chunks.slice();
       isCloudPlaying = true;
 
@@ -2849,29 +2685,62 @@
           return;
         }
         const nextText = activeCloudAudioQueue.shift();
-        const url = "https://translate.googleapis.com/translate_tts?ie=UTF-8&tl=vi&client=tw-ob&q=" + encodeURIComponent(nextText);
-        audioEl.src = url;
-        audioEl.playbackRate = appState.voiceSpeed || 0.92;
-        audioEl.onended = () => {
-          playNextChunk();
-        };
-        audioEl.onerror = () => {
-          isCloudPlaying = false;
-          activeCloudAudioQueue = [];
-          if (fallbackToLocal) {
-            speakViaLocalSynthesis(cleanText);
+        const encoded = encodeURIComponent(nextText);
+        // Unlocked via <meta name="referrer" content="no-referrer" />
+        const streamUrls = [
+          "https://translate.googleapis.com/translate_tts?ie=UTF-8&tl=vi&client=tw-ob&q=" + encoded,
+          "https://translate.google.com/translate_tts?ie=UTF-8&tl=vi&client=gtx&q=" + encoded
+        ];
+
+        let urlIdx = 0;
+
+        function tryPlayUrl() {
+          if (activeAudioInstance) {
+            try {
+              activeAudioInstance.pause();
+              activeAudioInstance.src = "";
+            } catch (e) {}
           }
-        };
-        const playPromise = audioEl.play();
-        if (playPromise !== undefined) {
-          playPromise.catch(() => {
-            isCloudPlaying = false;
-            activeCloudAudioQueue = [];
-            if (fallbackToLocal) {
-              speakViaLocalSynthesis(cleanText);
+          const snd = new Audio();
+          activeAudioInstance = snd;
+          snd.playbackRate = appState.voiceSpeed || 0.92;
+
+          snd.onended = () => {
+            playNextChunk();
+          };
+
+          snd.onerror = () => {
+            urlIdx++;
+            if (urlIdx < streamUrls.length) {
+              tryPlayUrl();
+            } else {
+              isCloudPlaying = false;
+              activeCloudAudioQueue = [];
+              if (fallbackToLocal) {
+                speakViaNativeAndroidBridge(cleanText);
+              }
             }
-          });
+          };
+
+          snd.src = streamUrls[urlIdx];
+          const p = snd.play();
+          if (p !== undefined) {
+            p.catch(() => {
+              urlIdx++;
+              if (urlIdx < streamUrls.length) {
+                tryPlayUrl();
+              } else {
+                isCloudPlaying = false;
+                activeCloudAudioQueue = [];
+                if (fallbackToLocal) {
+                  speakViaNativeAndroidBridge(cleanText);
+                }
+              }
+            });
+          }
         }
+
+        tryPlayUrl();
       }
 
       playNextChunk();
@@ -2886,19 +2755,15 @@
       const clean = normalizeVietnameseForSpeech(text);
       if (!clean) return;
 
-      const bestLocalVi = pickBestVietnameseVoice();
       const mode = appState.voiceEngineMode || "auto";
 
       if (mode === "cloud") {
         speakViaCloudStream(clean, true);
       } else if (mode === "local") {
-        if (bestLocalVi) {
-          speakViaLocalSynthesis(clean);
-        } else {
-          speakViaCloudStream(clean, true);
-        }
+        speakViaLocalSynthesis(clean);
       } else {
-        if (bestLocalVi && ((bestLocalVi.name || "").toLowerCase().includes("hoaimy") || (bestLocalVi.name || "").toLowerCase().includes("google") || (bestLocalVi.name || "").toLowerCase().includes("linh"))) {
+        // Auto mode: If Native Android TTS is connected, speak via Native Android TTS; otherwise use unlocked Cloud Stream with Native fallback
+        if (hasAndroidNativeTtsBridge()) {
           speakViaLocalSynthesis(clean);
         } else {
           speakViaCloudStream(clean, true);
@@ -2918,12 +2783,23 @@
       saveState();
     }
 
+    function hasAndroidNativeTtsBridge() {
+      return Boolean(
+        (window.AndroidNativeTTS && typeof window.AndroidNativeTTS.speak === "function") ||
+        (window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.TextToSpeech)
+      );
+    }
+
     function populateVoiceSelectDropdown() {
       const sel = document.getElementById("selectLocalVoice");
       if (!sel) return;
       const viVoices = getVietnameseVoices();
+      if (hasAndroidNativeTtsBridge()) {
+        sel.innerHTML = `<option value="android_native_vi" selected>🇻🇳 Giọng Tiếng Việt Hệ Thống Android (Google TTS Native)</option>`;
+        return;
+      }
       if (!viVoices.length) {
-        sel.innerHTML = `<option value="">(Thiết bị chưa cài giọng Tiếng Việt offline - Hệ thống tự dùng Giọng Cô Giáo Online)</option>`;
+        sel.innerHTML = `<option value="cloud_vi" selected>🌐 Giọng Cô Giáo Tiếng Việt Chuẩn (Google Audio Stream)</option>`;
         return;
       }
       sel.innerHTML = viVoices.map(v => {
